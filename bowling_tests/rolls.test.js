@@ -6,3 +6,4 @@ describe('Roll Count', () => {
         expect(rolls.roll_count()).toBe(0)
     })
 })
+

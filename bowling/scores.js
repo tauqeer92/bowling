@@ -9,3 +9,4 @@ class Scores {
 }
 
 module.exports = Scores
+

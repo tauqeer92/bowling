@@ -16,3 +16,4 @@ class Rolls {
 }
 
 module.exports = Rolls;
+
