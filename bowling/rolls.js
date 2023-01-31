@@ -3,18 +3,26 @@ class Rolls {
         this.rolls = []
     }
 
-    roll_count() {
+    rollCount() {
         return this.rolls.length
     }
 
     roll(score) {
-        if (this.roll_count() < 2) {
+        if (this.rollCount() < 2) {
             this.rolls.push(score)
         }
         
         else {
-            throw new Error('Too Many Rolls')
+            throw new Error('Too Many Rolls In One Frame')
         }
+    }
+
+    showRolls() {
+        return this.rolls
+    }
+
+    clearRolls() {
+        this.rolls = []
     }
 
 }
@@ -24,8 +32,7 @@ class Rolls {
 // const rolls = new Rolls()
 // rolls.roll(1)
 // rolls.roll(7)
-// const third = rolls.roll(3)
-// console.log(third)
+// console.log(rolls.showRolls())
 
 module.exports = Rolls;
 
