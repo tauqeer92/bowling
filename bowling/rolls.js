@@ -8,6 +8,10 @@ class Rolls {
         return this.frames.length
     }
 
+    showFrames() {
+        return this.frames 
+    }
+
     rollCount() {
         return this.rolls.length
     }
@@ -17,16 +21,12 @@ class Rolls {
 
         if (this.rollCount() == 2) {
             this.frames.push(this.rolls)
-            this.rolls = []
+            this.clearRolls()
         }
     }
 
     showRolls() {
         return this.rolls
-    }
-
-    showFrames() {
-        return this.frames 
     }
 
     showLatestRoll() {
