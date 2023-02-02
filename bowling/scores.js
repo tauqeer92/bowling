@@ -5,27 +5,57 @@ class Scores {
     constructor (rolls) {
         this.rolls = rolls
         this.score = 0
+        this.strikeIndex = null
+        this.spareIndex = null
+        this.bonusIndex = []
     }
 
-    readScore () {
-        const frames = this.rolls.showFrames()
-        for (let frame of frames) {
-            for (let score of frame) {
-                this.score += score
+    strikeOrSpareIndex() {
 
-            }
+        this.rolls.addFrame()
+        this.rolls.frameScore()
+        
+        
+        if (this.rolls.showRolls() == 10 && this.rolls.rollCount == 1) {
+            console.log('A')
+            this.score += this.rolls.showRolls()[0]
+            this.strikeIndex = this.rolls.showFrames().indexOf(this.rolls.showRolls())
+            this.rolls.clearRolls
+            this.rolls.clearFrameScore
+            return `This is strike index ${this.strikeIndex}`
         }
-        return this.score
+
+        else if (this.rolls.rollCount() == 2 && this.rolls.readFrameScore() == 10) {
+            console.log('B')
+            this.spareIndex = this.rolls.showFrames().indexOf(this.rolls.showRolls())
+            this.score += this.rolls.frameScore
+            this.rolls.clearFrameScore
+            return `This is spare index ${this.spareIndex}`
+        }
+
+        else {
+            console.log('C')
+
+            this.score += this.rolls.frameScore
+            this.rolls.clearFrameScore
+        }
+
+        
     }
 }
 
-// const rolls = new Rolls()
+const rolls = new Rolls()
+rolls.addRoll(10)
 // rolls.addRoll(5)
-// rolls.addRoll(5)
-// rolls.addRoll(4)
-// rolls.addRoll(4)
-// const scores = new Scores(rolls)
-// console.log(scores.readScore())
+rolls.frameScore()
+// rolls.frameScore()
+const scores = new Scores(rolls)
+console.log(`This is the frameScore ${rolls.readFrameScore()}`)
+console.log(scores.strikeOrSpareIndex())
+console.log(`This is the rolls array ${rolls.showRolls()}`)
+console.log(`This is the frames array ${rolls.showFrames()}`)
+console.log(`This is the roll count ${rolls.rollCount()}`)
+
 
 module.exports = Scores
 

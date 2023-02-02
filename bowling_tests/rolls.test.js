@@ -16,13 +16,18 @@ describe('Frame Count', () => {
         const rolls = new Rolls()
         rolls.addRoll(1)
         rolls.addRoll(7)
+        rolls.addFrame()
         expect(rolls.frameCount()).toBe(1)
     })
     it('should return 2 frames when input 4 rolls', () => {
         const rolls = new Rolls()
         rolls.addRoll(1)
         rolls.addRoll(7)
-        expect(rolls.frameCount()).toBe(1)
+        rolls.addFrame()
+        rolls.addRoll(1)
+        rolls.addRoll(7)
+        rolls.addFrame()
+        expect(rolls.frameCount()).toBe(2)
     })
 })
 
@@ -31,13 +36,15 @@ describe('Frames array', () => {
         const rolls = new Rolls()
         rolls.addRoll(5)
         rolls.addRoll(1)
+        rolls.addFrame()
         expect(rolls.showFrames()).toEqual([[5, 1]])
     })
 
-    it('should should display 1,7 when accessing last frame', () => {
+    it('should display 1,7 when accessing last frame', () => {
         const rolls = new Rolls()
         rolls.addRoll(1)
         rolls.addRoll(7)
+        rolls.addFrame()
         expect(rolls.showLatestRoll()).toEqual([1,7])
     })
 })
@@ -53,6 +60,8 @@ describe('Accurate rolls in 1 frame', () => {
         const rolls = new Rolls()
         rolls.addRoll(1)
         rolls.addRoll(7)
+        rolls.addFrame()
+        rolls.clearRolls()
         rolls.addRoll(3)
         expect(rolls.showRolls()).toEqual([3])
     })
@@ -69,6 +78,15 @@ describe('Roll Count', () => {
         const rolls = new Rolls()
         rolls.addRoll(1)
         expect(rolls.rollCount()).toBe(1)
+    })
+})
+
+describe('Strike', () => {
+    it('should equal 10', () => {
+        const rolls = new Rolls()
+        rolls.addRoll(10)
+        rolls.addFrame()
+        expect(rolls.showFrames()).toEqual([[10]])
     })
 })
 
