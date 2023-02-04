@@ -1,30 +1,65 @@
 const Scores = require('../bowling/scores')
 const Rolls = require('../bowling/rolls')
 
-describe('Score in first frame', () => {
+describe('Strike or spare index in frame array', () => {
 
-    it('should return 0', () => {
-        const rolls = new Rolls()
-        const scores = new Scores(rolls)
-        expect(scores.calculateScore()).toBe(0)
-    })
-
-    it('should return 9', () => {
-        const rolls = new Rolls()
-        rolls.addRoll(5)
-        rolls.addRoll(4)
-        rolls.frameScore()
-        const scores = new Scores(rolls)
-        expect(scores.calculateAddFrame(9))
-    })
-
-    it('should return 0', () => {
+    it('should return 0 when roll a strike', () => {
         const rolls = new Rolls()
         rolls.addRoll(10)
-        rolls.addRoll(2)
-        rolls.addRoll(2)
+        rolls.addRoll(4)
         const scores = new Scores(rolls)
-        expect(scores.calculateScore()).toBe(18)
+        expect(scores.strikeOrSpareIndex([0]))
     })
+
+    it('should return 0 when roll a spare', () => {
+        const rolls = new Rolls()
+        rolls.addRoll(5)
+        rolls.addRoll(5)
+        rolls.addFrame()
+        const scores = new Scores(rolls)
+        expect(scores.strikeOrSpareIndex()).toBe(0)
+    })
+
+    it('should return 1 when roll a spare', () => {
+        const rolls = new Rolls()
+        rolls.addRoll(4)
+        rolls.addRoll(4)
+        rolls.addFrame()
+        rolls.clearRolls()
+        rolls.addRoll(5)
+        rolls.addRoll(5)
+        rolls.addFrame()
+        const scores = new Scores(rolls)
+        expect(scores.strikeOrSpareIndex()).toBe(1)
+    })
+
+    it('should return 1 roll a strike', () => {
+        const rolls = new Rolls()
+        rolls.addRoll(4)
+        rolls.addRoll(4)
+        rolls.addFrame()
+        rolls.clearRolls()
+        rolls.addRoll(10)
+        rolls.addFrame()
+        const scores = new Scores(rolls)
+        expect(scores.strikeOrSpareIndex(1))
+    })
+    it('should return 1 when roll a strike', () => {
+        const rolls = new Rolls()
+        rolls.addRoll(4)
+        rolls.addRoll(4)
+        rolls.addFrame()
+        rolls.clearRolls()
+        rolls.addRoll(10)
+        rolls.addFrame()
+        rolls.clearRolls()
+        rolls.addRoll(4)
+        rolls.addRoll(4)
+        rolls.addFrame()
+        rolls.clearRolls()
+        const scores = new Scores(rolls)
+        expect(scores.strikeOrSpareIndex(1))
+    })
+
 
 })
