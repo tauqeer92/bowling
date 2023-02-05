@@ -1,9 +1,9 @@
 class Rolls {
+    
     constructor () {
         this.frames = []
         this.rolls = []
         this.frameScores = 0
-        this.spareIndex = null
     }
 
     frameCount() {
@@ -23,7 +23,7 @@ class Rolls {
     }
 
     calculateFrameScore() {
-        for (let score of this.rolls) {
+        for (let score of this.frames[this.frames.length - 1]) {
             this.frameScores += score
         }
 
@@ -37,11 +37,6 @@ class Rolls {
     clearFrame() {
         this.clearFrameScore()
         this.clearRolls()
-    }
-
-    index() {
-        this.spareIndex = this.showFrames().indexOf(this.showRolls())
-        return this.spareIndex
     }
 
     rollCount() {
@@ -68,10 +63,16 @@ class Rolls {
 
 
 // const rolls = new Rolls()
-// rolls.addRoll(5)
-// rolls.addRoll(5)
+// rolls.addRoll(10)
 // rolls.addFrame()
 // rolls.clearRolls()
+// rolls.addRoll(4)
+// rolls.addRoll(4)
+// rolls.addFrame()
+// rolls.clearRolls()
+// console.log(`This is frames ${rolls.showFrames()}`)
+// console.log(`This is the last frame ${rolls.showLatestRoll()}`)
+// console.log(`This is the frame score ${rolls.calculateFrameScore(rolls.showLatestRoll)}`)
 // rolls.addRoll(4)
 // rolls.addRoll(4)
 // rolls.addFrame()
