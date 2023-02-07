@@ -15,8 +15,8 @@ class Scores {
         console.log('Start of strike or spare index function')
         console.log('')
         // console.log(`This is the individual frame score ${this.rolls.calculateFrameScore()}`) // here 10's getting added
-        console.log(`This is the indexed frame ${this.rolls.showFrames()[this.rolls.frames.length - 1]}`)
-        console.log(`This is the rolls ${this.rolls.showRolls()}`)
+        // console.log(`This is the indexed frame ${this.rolls.showFrames()[this.rolls.frames.length - 1]}`)
+        // console.log(`This is the rolls ${this.rolls.showRolls()}`)
 
         if (this.rolls.rollCount() == 2) {
             if (this.spareIndex == null) {
@@ -25,6 +25,7 @@ class Scores {
                 if (this.rolls.readFrameScore() == 10) {
                     this.score += this.rolls.readFrameScore()
                     this.spareIndex = this.rolls.showFrames().indexOf(this.rolls.showRolls())
+                    console.log(`This is the spare index ${this.spareIndex}`)
                     console.log(`This is the score ${this.score}`)
                     this.rolls.clearFrameScore()
                     return this.spareIndex
@@ -37,18 +38,23 @@ class Scores {
         }
         
         else if (this.rolls.rollCount() == 1) {
-            if (this.spareIndex == null) {
+            if (this.strikeIndex == null) {
                 this.rolls.calculateFrameScore(this.rolls.showRolls())
+                
+                if (this.rolls.readFrameScore() == 10) {
+                    this.score += this.rolls.readFrameScore()
+                    console.log('A, strike or spare index')
+                    this.strikeIndex = this.rolls.showFrames().indexOf(this.rolls.showRolls())
+                    console.log(`This is the strike index ${this.strikeIndex}`)
+                    console.log(`This is the spare index ${this.strikeIndex}`)
+                    this.rolls.clearFrameScore()
+                    return this.strikeIndex
+    
+                }
             }
 
-            if (this.rolls.readFrameScore() == 10) {
-                this.score += this.rolls.readFrameScore()
-                console.log('A, strike or spare index')
-                this.strikeIndex = this.rolls.showFrames().indexOf(this.rolls.showRolls())
-                console.log(`This is the strike index ${this.strikeIndex}`)
+            else {
                 this.rolls.clearFrameScore()
-                return this.strikeIndex
-
             }
         }
 
@@ -68,18 +74,22 @@ class Scores {
     }
 
     calculate() {
+        // It calls strike or spare if either are null
+        // 
         console.log('')
         console.log('Start of calculate function')
-        if (this.strikeIndex == null) {
+        if (this.strikeIndex == null || this.spareIndex == null) {
             console.log('Called strike or spare Index')
             this.strikeOrSpareIndex()
         }
 
+        console.log('Hello')
+
         if (this.strikeIndex != null) {
             console.log('Triggered')
-            const bonusIndex = [this.readStrikeIndex() + 1]
+            const strikeBonusIndex = [this.readStrikeIndex() + 1]
             const doubleFrame = this.rolls.showFrames()[this.readStrikeIndex() + 1]
-            if (this.rolls.showFrames().includes(this.rolls.showFrames()[bonusIndex])) {
+            if (this.rolls.showFrames().includes(this.rolls.showFrames()[strikeBonusIndex])) {
                 console.log('A')
                 console.log(`This is the score ${this.score}`)
                 console.log(`This is the frame score in rolls class ${this.rolls.readFrameScore()}`)
@@ -87,7 +97,6 @@ class Scores {
                 const doubled = (this.rolls.calculateFrameScore(doubleFrame))*2
                 console.log(`This is the last frame ${this.rolls.showLatestRoll()}`)
                 console.log(`This is the individual frame after it's doubled ${doubled}`)
-                this.strikeIndex = null
                 console.log(`This is all the frames ${this.rolls.showFrames()}`)
                 console.log(`This is the score before double is added ${this.score}`)
                 this.score += doubled
@@ -96,12 +105,31 @@ class Scores {
         }
 
         else if (this.spareIndex != null) {
-            const doubleFrame = this.rolls.showFrames()[this.readSpareIndex() + 1]
-            if (this.rolls.showFrames().includes(doubleFrame)) {
-                console.log(`This is the frame which is getting doubled ${doubleFrame}`)
+            const spareBonusIndex = [this.readSpareIndex() + 1]
+            const doubleFrame = this.rolls.showFrames()[spareBonusIndex]
+            console.log('Hello2')
+            console.log(spareBonusIndex)
+            if (this.rolls.showFrames().includes(doubleFrame)) { // why isn't 1,2 included
+                console.log(`This is the frame which is getting doubled11å ${doubleFrame}`) // I need to section this off
                 const firstRoll = doubleFrame[0]
                 const score = (this.rolls.calculateFrameScore(doubleFrame))
+                console.log(`This is the score ${score}`)
+                const bonusScore = firstRoll + score
+                console.log(`This is the spare index ${this.spareIndex}`)
+                console.log(`This is the spare bonus index ${spareBonusIndex}`)
+                console.log(`This is double frame ${doubleFrame}`)
                 const bonus = this.score+=(firstRoll + score)
+                console.log(`This is the frame score ${this.rolls.readFrameScore()}`)
+                if (score == 10) {
+                    this.spareIndex = spareBonusIndex
+                    this.rolls.clearFrameScore()
+                }
+                else {
+                    console.log('x')
+                    this.spareIndex = null
+                }
+                console.log(`This is the bonus score ${bonusScore}`)
+                console.log(`This is the score overall ${this.score}`)
                 return this.score 
             }
         }
@@ -123,18 +151,24 @@ class Scores {
 }
 
 
-// const rolls = new Rolls()
-// const scores = new Scores(rolls)
-// rolls.addRoll(3)
-// rolls.addRoll(3)
-// rolls.addFrame()
-// scores.calculate()
+const rolls = new Rolls()
+const scores = new Scores(rolls)
+rolls.addRoll(5)
+rolls.addRoll(5)
+rolls.addFrame()
+scores.calculate()
+rolls.clearRolls()
+rolls.addRoll(5)
+rolls.addRoll(5)
+rolls.addFrame()
+scores.calculate()
+rolls.clearRolls()
+rolls.addRoll(1)
+rolls.addRoll(2)
+rolls.addFrame()
+scores.calculate()
 // rolls.clearRolls()
-// rolls.addRoll(10)
-// rolls.addFrame()
-// scores.calculate()
-// rolls.clearRolls()
-// console.log(scores.readScore())
+console.log(scores.readScore())
 
 
 module.exports = Scores
