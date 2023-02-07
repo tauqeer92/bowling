@@ -29,7 +29,7 @@ class Scores {
                     this.rolls.clearFrameScore()
                     return this.spareIndex
                 }
-                
+
                 else {
                     this.rolls.clearFrameScore()
                 }
@@ -123,18 +123,18 @@ class Scores {
 }
 
 
-const rolls = new Rolls()
-const scores = new Scores(rolls)
-rolls.addRoll(3)
-rolls.addRoll(3)
-rolls.addFrame()
-scores.calculate()
-rolls.clearRolls()
-rolls.addRoll(10)
-rolls.addFrame()
-scores.calculate()
-rolls.clearRolls()
-console.log(scores.readScore())
+// const rolls = new Rolls()
+// const scores = new Scores(rolls)
+// rolls.addRoll(3)
+// rolls.addRoll(3)
+// rolls.addFrame()
+// scores.calculate()
+// rolls.clearRolls()
+// rolls.addRoll(10)
+// rolls.addFrame()
+// scores.calculate()
+// rolls.clearRolls()
+// console.log(scores.readScore())
 
 
 module.exports = Scores
