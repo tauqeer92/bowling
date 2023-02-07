@@ -165,29 +165,29 @@ describe('Bonus score after strike or spare', () => {
     })
 })
 
-// describe('Two spares in a row', () => {
+describe('Two spares in a row', () => {
     
-//     it('should return 29 when roll 2 spares in a row', () => {
-//         const rolls = new Rolls()
-//         const scores = new Scores(rolls)
-//         rolls.addRoll(5)
-//         rolls.addRoll(5)
-//         rolls.addFrame()
-//         scores.calculate()
-//         rolls.clearRolls()
-//         rolls.addRoll(5)
-//         rolls.addRoll(5)
-//         rolls.addFrame()
-//         scores.calculate()
-//         rolls.clearRolls()
-//         rolls.addRoll(1)
-//         rolls.addRoll(2)
-//         rolls.addFrame()
-//         scores.calculate()
-//         rolls.clearRolls()
-//         expect(scores.readScore()).toBe(29)
-//     })
-// })
+    it('should return 29 when roll 2 spares in a row', () => {
+        const rolls = new Rolls()
+        const scores = new Scores(rolls)
+        rolls.addRoll(5)
+        rolls.addRoll(5)
+        rolls.addFrame()
+        scores.calculate()
+        rolls.clearRolls()
+        rolls.addRoll(5)
+        rolls.addRoll(5)
+        rolls.addFrame()
+        scores.calculate()
+        rolls.clearRolls()
+        rolls.addRoll(1)
+        rolls.addRoll(2)
+        rolls.addFrame()
+        scores.calculate()
+        rolls.clearRolls()
+        expect(scores.readScore()).toBe(29)
+    })
+})
 
 
 

@@ -87,7 +87,7 @@ class Scores {
 
         if (this.strikeIndex != null) {
             console.log('Triggered')
-            const strikeBonusIndex = [this.readStrikeIndex() + 1]
+            const strikeBonusIndex = this.readStrikeIndex() + 1
             const doubleFrame = this.rolls.showFrames()[this.readStrikeIndex() + 1]
             if (this.rolls.showFrames().includes(this.rolls.showFrames()[strikeBonusIndex])) {
                 console.log('A')
@@ -105,7 +105,7 @@ class Scores {
         }
 
         else if (this.spareIndex != null) {
-            const spareBonusIndex = [this.readSpareIndex() + 1]
+            const spareBonusIndex = this.readSpareIndex() + 1
             const doubleFrame = this.rolls.showFrames()[spareBonusIndex]
             console.log('Hello2')
             console.log(spareBonusIndex)
