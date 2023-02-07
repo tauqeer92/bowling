@@ -22,8 +22,8 @@ class Rolls {
         return this.frameScores
     }
 
-    calculateFrameScore() {
-        for (let score of this.frames[this.frames.length - 1]) {
+    calculateFrameScore(frames) {
+        for (let score of frames) {
             this.frameScores += score
         }
 

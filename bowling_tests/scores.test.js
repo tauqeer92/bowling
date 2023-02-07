@@ -13,16 +13,17 @@ describe('Strike or spare index in frame array', () => {
         rolls.addRoll(4)
         rolls.addRoll(4)
         rolls.addFrame()
-        expect(scores.readStrikeOrSpareIndex()).toBe(0)
+        expect(scores.readStrikeIndex()).toBe(0)
     })
 
     it('should return 0 when roll a spare', () => {
         const rolls = new Rolls()
+        const scores = new Scores(rolls)
         rolls.addRoll(5)
         rolls.addRoll(5)
         rolls.addFrame()
-        const scores = new Scores(rolls)
-        expect(scores.strikeOrSpareIndex()).toBe(0)
+        scores.strikeOrSpareIndex()
+        expect(scores.readSpareIndex()).toBe(0)
     })
 
     it('should return 1 when roll a spare', () => {
@@ -35,7 +36,8 @@ describe('Strike or spare index in frame array', () => {
         rolls.addRoll(5)
         rolls.addFrame()
         const scores = new Scores(rolls)
-        expect(scores.strikeOrSpareIndex()).toBe(1)
+        scores.strikeOrSpareIndex()
+        expect(scores.readSpareIndex()).toBe(1)
     })
 
 
@@ -48,7 +50,8 @@ describe('Strike or spare index in frame array', () => {
         rolls.addRoll(10)
         rolls.addFrame()
         const scores = new Scores(rolls)
-        expect(scores.strikeOrSpareIndex(1))
+        scores.strikeOrSpareIndex()
+        expect(scores.readStrikeIndex(1))
     })
 })
 
