@@ -7,7 +7,7 @@ class Scores {
         this.score = 0
         this.strikeIndex = null
         this.spareIndex = null
-        this.bonusIndex = []
+        this.strikeScore = 0
     }
 
     strikeOrSpareIndex() {
@@ -18,7 +18,28 @@ class Scores {
         // console.log(`This is the indexed frame ${this.rolls.showFrames()[this.rolls.frames.length - 1]}`)
         // console.log(`This is the rolls ${this.rolls.showRolls()}`)
 
-        if (this.rolls.rollCount() == 2) {
+        if (this.rolls.rollCount() == 1) {
+            if (this.strikeIndex == null) {
+                this.rolls.calculateFrameScore(this.rolls.showRolls())
+                
+                if (this.rolls.readFrameScore() == 10) {
+                    this.score += this.rolls.readFrameScore()
+                    console.log('A, strike or spare index')
+                    this.strikeIndex = this.rolls.showFrames().indexOf(this.rolls.showRolls())
+                    console.log(`This is the strike index ${this.strikeIndex}`)
+                    this.rolls.clearFrameScore()
+                    return this.strikeIndex
+    
+                }
+            }
+
+            else {
+                this.rolls.clearFrameScore()
+            }
+        }
+
+
+        else if (this.rolls.rollCount() == 2) {
             if (this.spareIndex == null) {
                 this.rolls.calculateFrameScore(this.rolls.showRolls())
 
@@ -37,27 +58,7 @@ class Scores {
             }
         }
         
-        else if (this.rolls.rollCount() == 1) {
-            if (this.strikeIndex == null) {
-                this.rolls.calculateFrameScore(this.rolls.showRolls())
-                
-                if (this.rolls.readFrameScore() == 10) {
-                    this.score += this.rolls.readFrameScore()
-                    console.log('A, strike or spare index')
-                    this.strikeIndex = this.rolls.showFrames().indexOf(this.rolls.showRolls())
-                    console.log(`This is the strike index ${this.strikeIndex}`)
-                    console.log(`This is the spare index ${this.strikeIndex}`)
-                    this.rolls.clearFrameScore()
-                    return this.strikeIndex
-    
-                }
-            }
-
-            else {
-                this.rolls.clearFrameScore()
-            }
-        }
-
+        
         else {
             console.log('C')
 
@@ -92,14 +93,35 @@ class Scores {
             if (this.rolls.showFrames().includes(this.rolls.showFrames()[strikeBonusIndex])) {
                 console.log('A')
                 console.log(`This is the score ${this.score}`)
+                console.log(`This is the strike index at the beginning ${this.strikeIndex}`)
                 console.log(`This is the frame score in rolls class ${this.rolls.readFrameScore()}`)
                 console.log(`This is the individual frame thats getting doubled ${doubleFrame}`)
-                const doubled = (this.rolls.calculateFrameScore(doubleFrame))*2
+                const beforeDouble = this.rolls.calculateFrameScore(doubleFrame)
+                // need to write condition if beforeDouble length is less than 2 need to look at the first roll of next frame
+                console.log(`This is double frame length ${doubleFrame.length}`)
+                const doubled = beforeDouble*2
                 console.log(`This is the last frame ${this.rolls.showLatestRoll()}`)
                 console.log(`This is the individual frame after it's doubled ${doubled}`)
                 console.log(`This is all the frames ${this.rolls.showFrames()}`)
                 console.log(`This is the score before double is added ${this.score}`)
                 this.score += doubled
+                if (doubleFrame.length < 2) {
+                    // need to write condition if beforeDouble length is less than 2 need to look at the first roll of next frame
+                    // if its less than 2 then add it to this.strikeScore
+                    // then write a condition saying how this.strikeScore does not equal 0, index first roll and double, add it onto this.strikeScore and then add it onto final score
+                    // we need to write a condition for if previous score is 10 and then look at next 2, if next one is only one, look at next one etc
+                    // need to decide which one to do
+                }
+
+                if (beforeDouble == 10) {
+                    this.strikeIndex = strikeBonusIndex
+                    this.rolls.clearFrameScore()
+                }
+                else {
+                    console.log('x')
+                    this.strikeIndex = null
+                }
+                console.log(`This is the strike index at the end of if ${this.strikeIndex}`)
                 console.log(`This is the score after doubled ${this.score}`)
             }
         }
@@ -153,21 +175,19 @@ class Scores {
 
 const rolls = new Rolls()
 const scores = new Scores(rolls)
-rolls.addRoll(5)
-rolls.addRoll(5)
+rolls.addRoll(10)
 rolls.addFrame()
 scores.calculate()
 rolls.clearRolls()
-rolls.addRoll(5)
-rolls.addRoll(5)
+rolls.addRoll(10)
 rolls.addFrame()
 scores.calculate()
 rolls.clearRolls()
-rolls.addRoll(1)
+rolls.addRoll(2)
 rolls.addRoll(2)
 rolls.addFrame()
 scores.calculate()
-// rolls.clearRolls()
+rolls.clearRolls()
 console.log(scores.readScore())
 
 

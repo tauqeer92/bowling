@@ -189,5 +189,27 @@ describe('Two spares in a row', () => {
     })
 })
 
+describe('Two strikes in a row', () => {
+    
+    it('should return 29 when roll 2 spares in a row', () => {
+        const rolls = new Rolls()
+        const scores = new Scores(rolls)
+        rolls.addRoll(10)
+        rolls.addFrame()
+        scores.calculate()
+        rolls.clearRolls()
+        rolls.addRoll(10)
+        rolls.addFrame()
+        scores.calculate()
+        rolls.clearRolls()
+        rolls.addRoll(2)
+        rolls.addRoll(2)
+        rolls.addFrame()
+        scores.calculate()
+        rolls.clearRolls()
+        expect(scores.readScore()).toBe(40)
+    })
+})
+
 
 
