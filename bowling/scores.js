@@ -13,9 +13,6 @@ class Scores {
 
         console.log('Start of strike or spare index function')
         console.log('')
-        // console.log(`This is the individual frame score ${this.rolls.calculateFrameScore()}`) // here 10's getting added
-        // console.log(`This is the indexed frame ${this.rolls.showFrames()[this.rolls.frames.length - 1]}`)
-        // console.log(`This is the rolls ${this.rolls.showRolls()}`)
 
         if (this.rolls.rollCount() == 1) {
             if (this.strikeIndex == null) {
@@ -74,8 +71,6 @@ class Scores {
     }
 
     calculate() {
-        // It calls strike or spare if either are null
-        // 
         console.log('')
         console.log('Start of calculate function')
         if (this.strikeIndex == null || this.spareIndex == null) {
@@ -84,75 +79,71 @@ class Scores {
         }
 
         if (this.strikeIndex != null) {
-            const doubleFrameIndex = this.readStrikeIndex() + 1 // why is this here? A: This is the frame thats getting doubled, this.strikeIndex is the frame which scores the 10, thats it
+            const bonusFrameIndex = this.readStrikeIndex() + 1
             const previousFrameIndex = this.rolls.showFrames().indexOf(this.rolls.showRolls()) - 1
             const previousPreviousFrameIndex = this.rolls.showFrames().indexOf(this.rolls.showRolls()) - 2
-            const doubleFrame = this.rolls.showFrames()[doubleFrameIndex]
-            if (this.rolls.showFrames().includes(doubleFrame)) {
-                const beforeDouble = this.rolls.calculateFrameScore(doubleFrame)
+            const bonusFrame = this.rolls.showFrames()[bonusFrameIndex]
+            if (this.rolls.showFrames().includes(bonusFrame)) {
+                const bonusFrameScore = this.rolls.calculateFrameScore(bonusFrame)
                 const previousFrame = this.rolls.showFrames()[previousFrameIndex]
                 const previousPreviousFrame = this.rolls.showFrames()[previousPreviousFrameIndex]
                 console.log(`This is previous frame ${previousFrame}`)
-                if (beforeDouble == 10 && previousFrame == 10  && previousPreviousFrame != 10) {
-                    console.log('Z')
-                    this.strikeIndex = doubleFrameIndex
-                    const doubled = beforeDouble*2
+
+                if (bonusFrameScore != 10 && previousFrame == 10 && previousPreviousFrame == 10) {
+                    console.log('C')
+                    console.log(`This is previous frame first roll ${previousFrame[0]}`)
+                    const doubled = (bonusFrameScore*2) + (bonusFrame[0])
                     this.score += doubled
-                    console.log(`This is the score ${this.score}`)
+                    this.strikeIndex = null
                     this.rolls.clearFrameScore()
                 }
 
-                else if (beforeDouble == 10 && previousFrame == 10 && previousPreviousFrame == 10) {
+                else if (bonusFrameScore != 10) {
+                    console.log('D')
+                    this.score += bonusFrameScore*2
+                    this.strikeIndex = null
+
+                }
+
+                else if (bonusFrameScore == 10 && previousFrame == 10 && previousPreviousFrame == 10) {
                     console.log('A')
                     console.log(`This is previous frame first roll ${previousFrame[0]}`)
                     console.log(`This is the score before doubled ${this.score}`)
-                    const doubled = (beforeDouble*2) + (beforeDouble)
+                    const doubled = (bonusFrameScore*2) + (bonusFrameScore)
                     this.score += doubled
-                    console.log(`This is double frame ${doubleFrame}`)
+                    console.log(`This is double frame ${bonusFrame}`)
                     console.log(`This is the score ${this.score}`)
-                    this.strikeIndex = doubleFrameIndex
-                    this.rolls.clearFrameScore()
-                }
-
-                else if (beforeDouble == 10 && previousFrame != 10 && previousPreviousFrame != 10) {
-                    console.log('B')
-                    console.log(`This is previous frame first roll ${previousFrame[0]}`)
-                    const doubled = (beforeDouble*2)
-                    this.score += doubled
-                    this.strikeIndex = doubleFrameIndex
+                    this.strikeIndex = bonusFrameIndex
                     this.rolls.clearFrameScore()
                 }
                 
-                else if (beforeDouble != 10 && previousFrame == 10 && previousPreviousFrame == 10) {
-                    console.log('C')
-                    console.log(`This is previous frame first roll ${previousFrame[0]}`)
-                    const doubled = (beforeDouble*2) + (doubleFrame[0])
-                    this.score += doubled
-                    this.strikeIndex = null
-                    this.rolls.clearFrameScore()
-                }
+                
                 else {
-                    console.log('D')
-                    this.score += beforeDouble*2
-                    this.strikeIndex = null
+                    console.log('Z')
+                    this.strikeIndex = bonusFrameIndex
+                    const doubled = bonusFrameScore*2
+                    this.score += doubled
+                    console.log(`This is the score ${this.score}`)
+                    this.rolls.clearFrameScore()
+                    
                 }
             }
         }
 
         else if (this.spareIndex != null) {
             const spareBonusIndex = this.readSpareIndex() + 1
-            const doubleFrame = this.rolls.showFrames()[spareBonusIndex]
+            const bonusFrame = this.rolls.showFrames()[spareBonusIndex]
             console.log('Hello2')
             console.log(spareBonusIndex)
-            if (this.rolls.showFrames().includes(doubleFrame)) { // why isn't 1,2 included
-                console.log(`This is the frame which is getting doubled11å ${doubleFrame}`) // I need to section this off
-                const firstRoll = doubleFrame[0]
-                const score = (this.rolls.calculateFrameScore(doubleFrame))
+            if (this.rolls.showFrames().includes(bonusFrame)) { 
+                console.log(`This is the frame which is getting doubled11å ${bonusFrame}`) 
+                const firstRoll = bonusFrame[0]
+                const score = (this.rolls.calculateFrameScore(bonusFrame))
                 console.log(`This is the score ${score}`)
                 const bonusScore = firstRoll + score
                 console.log(`This is the spare index ${this.spareIndex}`)
                 console.log(`This is the spare bonus index ${spareBonusIndex}`)
-                console.log(`This is double frame ${doubleFrame}`)
+                console.log(`This is double frame ${bonusFrame}`)
                 const bonus = this.score+=(firstRoll + score)
                 console.log(`This is the frame score ${this.rolls.readFrameScore()}`)
                 if (score == 10) {
