@@ -7,7 +7,6 @@ class Scores {
         this.score = 0
         this.strikeIndex = null
         this.spareIndex = null
-        this.strikeScore = 0
     }
 
     strikeOrSpareIndex() {
@@ -84,45 +83,43 @@ class Scores {
             this.strikeOrSpareIndex()
         }
 
-        console.log('Hello')
-
         if (this.strikeIndex != null) {
-            console.log('Triggered')
-            const strikeBonusIndex = this.readStrikeIndex() + 1
-            const doubleFrame = this.rolls.showFrames()[this.readStrikeIndex() + 1]
-            if (this.rolls.showFrames().includes(this.rolls.showFrames()[strikeBonusIndex])) {
-                console.log('A')
-                console.log(`This is the score ${this.score}`)
-                console.log(`This is the strike index at the beginning ${this.strikeIndex}`)
-                console.log(`This is the frame score in rolls class ${this.rolls.readFrameScore()}`)
-                console.log(`This is the individual frame thats getting doubled ${doubleFrame}`)
+            const doubleFrameIndex = this.readStrikeIndex() + 1 // why is this here? A: This is the frame thats getting doubled, this.strikeIndex is the frame which scores the 10, thats it
+            const previousFrameIndex = this.rolls.showFrames().indexOf(this.rolls.showRolls()) - 1
+            const previousPreviousFrameIndex = this.rolls.showFrames().indexOf(this.rolls.showRolls()) - 2
+            const doubleFrame = this.rolls.showFrames()[doubleFrameIndex]
+            if (this.rolls.showFrames().includes(doubleFrame)) {
                 const beforeDouble = this.rolls.calculateFrameScore(doubleFrame)
-                // need to write condition if beforeDouble length is less than 2 need to look at the first roll of next frame
-                console.log(`This is double frame length ${doubleFrame.length}`)
-                const doubled = beforeDouble*2
-                console.log(`This is the last frame ${this.rolls.showLatestRoll()}`)
-                console.log(`This is the individual frame after it's doubled ${doubled}`)
-                console.log(`This is all the frames ${this.rolls.showFrames()}`)
-                console.log(`This is the score before double is added ${this.score}`)
-                this.score += doubled
-                if (doubleFrame.length < 2) {
-                    // need to write condition if beforeDouble length is less than 2 need to look at the first roll of next frame
-                    // if its less than 2 then add it to this.strikeScore
-                    // then write a condition saying how this.strikeScore does not equal 0, index first roll and double, add it onto this.strikeScore and then add it onto final score
-                    // we need to write a condition for if previous score is 10 and then look at next 2, if next one is only one, look at next one etc
-                    // need to decide which one to do
+                const previousFrame = this.rolls.showFrames()[previousFrameIndex]
+                const previousPreviousFrame = this.rolls.showFrames()[previousPreviousFrameIndex]
+                console.log(`This is previous frame ${previousFrame}`)
+                if (beforeDouble == 10 && previousFrame == 10) {
+                    this.strikeIndex = doubleFrameIndex
+                    const doubled = beforeDouble*2
+                    this.score += doubled
+                    this.rolls.clearFrameScore()
                 }
 
-                if (beforeDouble == 10) {
-                    this.strikeIndex = strikeBonusIndex
+                else if (beforeDouble == 10 && previousFrame == 10 && previousPreviousFrame == 10) {
+                    console.log(`This is previous frame first roll ${previousFrame[0]}`)
+                    const doubled = (beforeDouble*2) + (doubleFrame)
+                    console.log(`This is the score ${this.score}`)
+                    this.score += doubled
+                    this.strikeIndex = doubleFrameIndex
+                    this.rolls.clearFrameScore()
+                }
+                
+                else if (beforeDouble != 10 && previousFrame == 10 && previousPreviousFrame == 10) {
+                    console.log(`This is previous frame first roll ${previousFrame[0]}`)
+                    const doubled = (beforeDouble*2) + (doubleFrame[0])
+                    this.score += doubled
+                    this.strikeIndex = null
                     this.rolls.clearFrameScore()
                 }
                 else {
-                    console.log('x')
+                    this.score += beforeDouble*2
                     this.strikeIndex = null
                 }
-                console.log(`This is the strike index at the end of if ${this.strikeIndex}`)
-                console.log(`This is the score after doubled ${this.score}`)
             }
         }
 
@@ -152,7 +149,7 @@ class Scores {
                 }
                 console.log(`This is the bonus score ${bonusScore}`)
                 console.log(`This is the score overall ${this.score}`)
-                return this.score 
+                return this.score
             }
         }
 
@@ -175,6 +172,10 @@ class Scores {
 
 const rolls = new Rolls()
 const scores = new Scores(rolls)
+rolls.addRoll(10)
+rolls.addFrame()
+scores.calculate()
+rolls.clearRolls()
 rolls.addRoll(10)
 rolls.addFrame()
 scores.calculate()

@@ -190,8 +190,7 @@ describe('Two spares in a row', () => {
 })
 
 describe('Two strikes in a row', () => {
-    
-    it('should return 29 when roll 2 spares in a row', () => {
+    it('should return 40 when roll 2 strikes in a roll and then 2 and 2', () => {
         const rolls = new Rolls()
         const scores = new Scores(rolls)
         rolls.addRoll(10)
@@ -210,6 +209,31 @@ describe('Two strikes in a row', () => {
         expect(scores.readScore()).toBe(40)
     })
 })
+
+// describe('Three strikes in a row', () => {
+//     it('should return 40 when roll 2 strikes in a roll and then 2 and 2', () => {
+//         const rolls = new Rolls()
+//         const scores = new Scores(rolls)
+//         rolls.addRoll(10)
+//         rolls.addFrame()
+//         scores.calculate()
+//         rolls.clearRolls()
+//         rolls.addRoll(10)
+//         rolls.addFrame()
+//         scores.calculate()
+//         rolls.clearRolls()
+//         rolls.addRoll(10)
+//         rolls.addFrame()
+//         scores.calculate()
+//         rolls.clearRolls()
+//         rolls.addRoll(2)
+//         rolls.addRoll(2)
+//         rolls.addFrame()
+//         scores.calculate()
+//         rolls.clearRolls()
+//         expect(scores.readScore()).toBe(70)
+//     })
+// })
 
 
 
