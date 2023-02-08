@@ -93,23 +93,38 @@ class Scores {
                 const previousFrame = this.rolls.showFrames()[previousFrameIndex]
                 const previousPreviousFrame = this.rolls.showFrames()[previousPreviousFrameIndex]
                 console.log(`This is previous frame ${previousFrame}`)
-                if (beforeDouble == 10 && previousFrame == 10) {
+                if (beforeDouble == 10 && previousFrame == 10  && previousPreviousFrame != 10) {
+                    console.log('Z')
                     this.strikeIndex = doubleFrameIndex
                     const doubled = beforeDouble*2
                     this.score += doubled
+                    console.log(`This is the score ${this.score}`)
                     this.rolls.clearFrameScore()
                 }
 
                 else if (beforeDouble == 10 && previousFrame == 10 && previousPreviousFrame == 10) {
+                    console.log('A')
                     console.log(`This is previous frame first roll ${previousFrame[0]}`)
-                    const doubled = (beforeDouble*2) + (doubleFrame)
+                    console.log(`This is the score before doubled ${this.score}`)
+                    const doubled = (beforeDouble*2) + (beforeDouble)
+                    this.score += doubled
+                    console.log(`This is double frame ${doubleFrame}`)
                     console.log(`This is the score ${this.score}`)
+                    this.strikeIndex = doubleFrameIndex
+                    this.rolls.clearFrameScore()
+                }
+
+                else if (beforeDouble == 10 && previousFrame != 10 && previousPreviousFrame != 10) {
+                    console.log('B')
+                    console.log(`This is previous frame first roll ${previousFrame[0]}`)
+                    const doubled = (beforeDouble*2)
                     this.score += doubled
                     this.strikeIndex = doubleFrameIndex
                     this.rolls.clearFrameScore()
                 }
                 
                 else if (beforeDouble != 10 && previousFrame == 10 && previousPreviousFrame == 10) {
+                    console.log('C')
                     console.log(`This is previous frame first roll ${previousFrame[0]}`)
                     const doubled = (beforeDouble*2) + (doubleFrame[0])
                     this.score += doubled
@@ -117,6 +132,7 @@ class Scores {
                     this.rolls.clearFrameScore()
                 }
                 else {
+                    console.log('D')
                     this.score += beforeDouble*2
                     this.strikeIndex = null
                 }
