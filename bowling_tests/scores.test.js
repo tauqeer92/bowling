@@ -222,7 +222,7 @@ describe('Three strikes in a row', () => {
         rolls.addFrame()
         scores.calculate()
         rolls.clearRolls()
-        rolls.addRoll(10)
+        rolls.addRoll(10) // this is not getting added
         rolls.addFrame()
         scores.calculate()
         rolls.clearRolls()
