@@ -92,41 +92,6 @@ class Scores {
         return this.listOfScores
     }
 
-    calculateSpare() {
-        if (this.spareIndex != null) {
-            const spareBonusIndex = this.readSpareIndex() + 1
-            const bonusFrame = this.rolls.showFrames()[spareBonusIndex]
-            console.log('Hello2')
-            console.log(spareBonusIndex)
-            if (this.rolls.showFrames().includes(bonusFrame)) { 
-                console.log(`This is the frame which is getting doubled11å ${bonusFrame}`) 
-                const firstRoll = bonusFrame[0]
-                const score = (this.rolls.calculateFrameScore(bonusFrame))
-                console.log(`This is the score ${score}`)
-                const bonusScore = firstRoll + score
-                console.log(`This is the spare index ${this.spareIndex}`)
-                console.log(`This is the spare bonus index ${spareBonusIndex}`)
-                console.log(`This is double frame ${bonusFrame}`)
-                const bonus = this.score+=(firstRoll + score)
-                console.log(`This is the frame score ${this.rolls.readFrameScore()}`)
-                if (score == 10) {
-                    this.spareIndex = spareBonusIndex
-                    this.rolls.clearFrameScore()
-                }
-                else {
-                    console.log('x')
-                    this.spareIndex = null
-                }
-                console.log(`This is the bonus score ${bonusScore}`)
-                console.log(`This is the score overall ${this.score}`)
-                return this.score
-            }
-        }
-
-        calculateStrike()
-
-    }
-
     calculate() {
         console.log('')
         console.log('Start of calculate function')
@@ -258,7 +223,35 @@ class Scores {
         }
         
 
-        
+        else if (this.spareIndex != null) {
+            const spareBonusIndex = this.readSpareIndex() + 1
+            const bonusFrame = this.rolls.showFrames()[spareBonusIndex]
+            console.log('Hello2')
+            console.log(spareBonusIndex)
+            if (this.rolls.showFrames().includes(bonusFrame)) { 
+                console.log(`This is the frame which is getting doubled11å ${bonusFrame}`) 
+                const firstRoll = bonusFrame[0]
+                const score = (this.rolls.calculateFrameScore(bonusFrame))
+                console.log(`This is the score ${score}`)
+                const bonusScore = firstRoll + score
+                console.log(`This is the spare index ${this.spareIndex}`)
+                console.log(`This is the spare bonus index ${spareBonusIndex}`)
+                console.log(`This is double frame ${bonusFrame}`)
+                const bonus = this.score+=(firstRoll + score)
+                console.log(`This is the frame score ${this.rolls.readFrameScore()}`)
+                if (score == 10) {
+                    this.spareIndex = spareBonusIndex
+                    this.rolls.clearFrameScore()
+                }
+                else {
+                    console.log('x')
+                    this.spareIndex = null
+                }
+                console.log(`This is the bonus score ${bonusScore}`)
+                console.log(`This is the score overall ${this.score}`)
+                return this.score
+            }
+        }
 
         else {
             console.log(`This is the individual frames that is not a strike ${this.rolls.showFrames()}`)
