@@ -8,24 +8,28 @@ class Scores {
         this.strikeIndex = null
         this.spareIndex = null
         this.listOfScores = []
-        this.waitingArea = {}
         this.frames = this.rolls.showFrames()
-        this.frameTotal = 0
         this.frameScore = []
     }
 
-    sum (array) {
+    sumAndRemove (array) {
         let sum = 0
         while (array.length > 0) {
             array.forEach((number) => {
-                console.log(`This is number ${number}`)
                 sum += parseInt(number)
             })
-            console.log(`This is sum ${sum}`)
-
         }
 
         return sum
+    }
+
+    sum(array) {
+        let sum = 0
+        array.forEach((number) => {
+            sum += parseInt(number)
+        })
+        return sum
+
     }
 
     strikeOrSpareIndex() {
@@ -92,6 +96,160 @@ class Scores {
         return this.listOfScores
     }
 
+    totalAndAddToListOfScores() {
+        console.log(`This is the first element in the frame score ${this.frameScore[0]}`)
+        console.log(`This is the frame score ${this.frameScore}`)
+        console.log('A')
+        const sum = this.sum(this.frameScore[this.frameScore.length - 1])
+        console.log(`This is the sum ${parseInt(sum)}`) // when I index the strike I get an error
+        const lastElement = this.listOfScores[this.listOfScores.length - 1]
+        const total = parseInt(sum) + parseInt(lastElement)
+        this.listOfScores.push(parseInt(total))
+        // this.frameScore.shift()
+
+    }
+
+    calculateBonusAfterOneStrike() {
+        const lastElementListOfScores = this.listOfScores[this.listOfScores.length - 1]
+        console.log('Calculating bonus After One Strike')
+        const lastIndex = this.frameScore[this.frameScore.length - 1]
+        const total= this.sum(lastIndex)
+        const first = this.frameScore[0] + total
+        if (this.listOfScores.length > 0) {
+            const newTotal = this.listOfScores[this.listOfScores.length - 1] + first
+            this.listOfScores.push(parseInt(newTotal))
+        }
+        else {
+            this.listOfScores.push(parseInt(first))
+
+        }
+        this.frameScore.shift()
+        this.strikeIndex = null
+        
+        this.totalAndAddToListOfScores()
+
+    }
+
+    calculateBonusAfterTwoStrikes() {
+        console.log(`called calculate bonus after 2 strikes`)
+        let first = parseInt(this.frameScore[0])
+        const b = parseInt(this.frameScore[1]) + parseInt(this.frameScore[2])
+        first += b
+        if (this.listOfScores.length > 0) {
+            const newElement = first + this.listOfScores[0]
+            this.listOfScores.push(parseInt(newElement))
+            this.frameScore.shift()
+            this.strikeIndex = null
+            this.rolls.clearFrameScore()
+        }
+
+        else {
+            this.listOfScores.push(parseInt(first))
+            this.frameScore.shift()
+
+        }
+        // this.frameScore.shift()
+        // this.strikeIndex = null
+        // this.totalAndAddToListOfScores()
+
+    }
+
+    calculateThreeStrikes() {
+        this.frameScore.push(parseInt(this.rolls.showRolls()))
+        this.frameScore[0] += (parseInt(this.frameScore[1]) + parseInt(this.frameScore[2]))
+        this.listOfScores.push(parseInt(this.frameScore[0]))
+        this.frameScore.shift()
+        if (!this.frameScore.includes(10)) {
+            this.sum(this.frameScore)
+            this.listOfScores.push(parseInt(sum))
+        }
+    }
+
+
+    calculateStrike() {
+        const beforeCurrentBonus = this.rolls.showFrames().indexOf(this.rolls.showRolls()) - 2
+            const bonusFrameIndex = this.readStrikeIndex() + 1
+            const bonusFrame = this.rolls.showFrames()[bonusFrameIndex]
+            
+            if (this.rolls.showFrames().includes(bonusFrame)) {
+                const previous = this.rolls.showFrames()[beforeCurrentBonus]
+                if (bonusFrame.length < 2) {
+                    // if the bonus frame is a 10, do this
+                            this.strikeIndex = bonusFrameIndex
+
+                            if (this.frameScore.length == 2) {
+                                this.calculateThreeStrikes() // we're shifting the first array here
+                            }
+
+                            else {
+                                
+                                this.frameScore.push(parseInt(this.rolls.showRolls()))
+                            }
+                }
+                       
+        
+                else {
+                    this.frameScore.push(this.rolls.showRolls())
+                    console.log(`This is the frame score ${this.frameScore}`)
+                    
+                    // if the bonus frame isn't 2, then just add it on to the strike
+                    if (this.frameScore.length == 2) {
+                        console.log('About to call bonusAfterOneStrike')
+                        this.calculateBonusAfterOneStrike()
+                    }
+
+                    else if (this.frameScore.length == 3) {
+                        console.log('B')
+                        //if the frames include 2 strikes and a normal one
+                        this.calculateBonusAfterTwoStrikes()
+                       
+                        if (this.frameScore.includes(10)) {
+                            this.calculateBonusAfterOneStrike()
+                            if (!this.frameScore.includes(10)) {
+                                this.totalAndAddToListOfScores()
+                                
+                            }
+                        }
+                    }
+                    else {
+                        console.log('C')
+                        console.log(`This is frame score ${this.frameScore}`)
+                        const bonusFrameScore = this.rolls.calculateFrameScore(bonusFrame)
+                        this.score += bonusFrameScore * 2
+                        this.rolls.clearFrameScore()
+                    }
+                }
+            }
+
+            else {
+                console.log(`added to frame score`)
+                this.frameScore.push(parseInt(this.rolls.showRolls()))
+                console.log(`This is the frame score ${this.frameScore}`)
+                // this.totalAndAddToListOfScores()
+            }
+
+    }
+
+    calculateSpare() {
+        const spareBonusIndex = this.readSpareIndex() + 1
+        const bonusFrame = this.rolls.showFrames()[spareBonusIndex]
+        if (this.rolls.showFrames().includes(bonusFrame)) { 
+            const firstRoll = bonusFrame[0]
+            const score = (this.rolls.calculateFrameScore(bonusFrame))
+            const bonusScore = firstRoll + score
+            const bonus = this.score+=(firstRoll + score)
+            if (score == 10) {
+                this.spareIndex = spareBonusIndex
+                this.rolls.clearFrameScore()
+            }
+            else {
+                this.spareIndex = null
+            }
+            return this.score
+        }
+
+    }
+
     calculate() {
         console.log('')
         console.log('Start of calculate function')
@@ -101,171 +259,29 @@ class Scores {
         }
 
         if (this.strikeIndex != null) {
-            const beforeCurrentBonus = this.rolls.showFrames().indexOf(this.rolls.showRolls()) - 2
-            const bonusFrameIndex = this.readStrikeIndex() + 1
-            const bonusFrame = this.rolls.showFrames()[bonusFrameIndex]
-            
-            if (this.rolls.showFrames().includes(bonusFrame)) {
-                const previous = this.rolls.showFrames()[beforeCurrentBonus]
-                if (bonusFrame.length < 2) {
-                            this.strikeIndex = bonusFrameIndex
-                            if (this.frameScore.length == 2) {
-                                this.frameScore.push(parseInt(this.rolls.showRolls()))
-                                console.log('B')
-                                console.log(`This is the first element ${this.frameScore[0]}`)
-                                console.log(`This is the second element ${this.frameScore[1]}`)
-                                console.log(`This is the third element ${this.frameScore[2]}`)
-                                this.frameScore[0] += (parseInt(this.frameScore[1]) + parseInt(this.frameScore[2]))
-                                this.listOfScores.push(parseInt(this.frameScore[0]))
-                                this.frameScore.shift()
-                                if (!this.frameScore.includes(10)) {
-                                    this.sum(this.frameScore)
-                                    this.listOfScores.push(parseInt(sum))
-                                }
-                                // write a for loop here
-                            }
-
-                            else {
-                                console.log('Hi')
-                                this.frameScore.push(parseInt(this.rolls.showRolls()))
-                                this.strikeIndex = bonusFrameIndex
-                            }
-                            console.log(`This is the strike index ${this.strikeIndex}`)
-                            console.log(`This is the score ${this.score}`)
-                            console.log(`This is the list of scores ${this.listOfScores}`)
-                            console.log(`This is the frame scores ${this.frameScore}`)
-                }
-                       
-        
-                else {
-                    console.log('C')
-                    console.log(`This is the rolls ${this.rolls.showRolls()}`)
-                    this.frameScore.push(this.rolls.showRolls())
-                    console.log(`This is frame score ${this.frameScore}`)
-                    
-                    if (this.frameScore.length == 2) {
-                        console.log(`This is frame score ${this.frameScore}`)
-                        const lastIndex = this.frameScore[this.frameScore.length - 1]
-                        console.log(`This is lastIndex ${lastIndex}`)
-                        const total= this.sum(lastIndex)
-                        console.log(`This is total ${parseInt(total)}`)
-                        console.log(`This is the last frame ${this.frameScore[this.frameScore.length - 1]}`)
-                        const first = this.frameScore[0] + total
-                        this.listOfScores.push(parseInt(first))
-                        this.strikeIndex = null
-
-
-                    }
-
-                    else if (this.frameScore.length == 3) {
-                        console.log('J')
-                        console.log(`This is frame score ${this.frameScore}`)
-                        const b = parseInt(this.frameScore[1]) + parseInt(this.frameScore[2])
-                        let first = parseInt(this.frameScore[0])
-                        console.log(`This is b ${b}`)
-                        first += b
-                        console.log(`This is first ${first}`)
-                        console.log(`This is the list of scores ${this.listOfScores}`)
-                        if (this.listOfScores.length > 0) {
-                            const newElement = first + this.listOfScores[0]
-                            this.listOfScores.push(parseInt(newElement))
-                            this.frameScore.shift()
-                            this.strikeIndex = null
-                            this.rolls.clearFrameScore()
-                        }
-
-                        else {
-                            this.listOfScores.push(parseInt(first))
-                            this.frameScore.shift()
-
-                        }
-                        
-                        
-                        console.log(`This is the frame score array ${this.frameScore}`)
-                        console.log(`This is the list of scores ${this.listOfScores}`)
-                        console.log(`This is the frame score array length ${this.frameScore.length}`)
-                        if (this.frameScore.includes(10)) {
-                            console.log('Ping')
-                            console.log(`This is the first element ${this.frameScore[0]}`)
-                            console.log(`This is the second element ${this.frameScore[1]}`)
-                            const total = this.frameScore[0] += (parseInt(this.rolls.calculateFrameScore(this.frameScore[1])))
-                            const newTotal = this.listOfScores[this.listOfScores.length - 1] + total
-                            this.listOfScores.push(parseInt(newTotal))
-                            this.frameScore.shift()
-                            console.log(`This is the list of scores ${this.listOfScores}`)
-
-                            if (!this.frameScore.includes(10)) {
-                                this.rolls.clearFrameScore()
-                                console.log(`This is the first element ${this.frameScore[0]}`)
-                                const j = this.rolls.calculateFrameScore(this.frameScore[0])
-                                const x = this.listOfScores[this.listOfScores.length - 1]
-                                console.log(`This is x ${x}`)
-                                console.log(`This is j ${j}`)
-                                const hello = x + j
-                                this.listOfScores.push(parseInt(hello))
-                                this.frameScore.shift()
-                            }
-                        }
-                    }
-                    else {
-                        const bonusFrameScore = this.rolls.calculateFrameScore(bonusFrame)
-                        this.score += bonusFrameScore * 2
-                        this.rolls.clearFrameScore()
-                    }
-                }
-            }
-
-            else {
-                this.frameScore.push(parseInt(this.rolls.showRolls()))
-                console.log(`Ping! This is the frame scores ${this.frameScore}`)
-            }
-               
+            console.log(`Theres a strike index`)
+            this.calculateStrike()
         }
         
 
         else if (this.spareIndex != null) {
-            const spareBonusIndex = this.readSpareIndex() + 1
-            const bonusFrame = this.rolls.showFrames()[spareBonusIndex]
-            console.log('Hello2')
-            console.log(spareBonusIndex)
-            if (this.rolls.showFrames().includes(bonusFrame)) { 
-                console.log(`This is the frame which is getting doubled11å ${bonusFrame}`) 
-                const firstRoll = bonusFrame[0]
-                const score = (this.rolls.calculateFrameScore(bonusFrame))
-                console.log(`This is the score ${score}`)
-                const bonusScore = firstRoll + score
-                console.log(`This is the spare index ${this.spareIndex}`)
-                console.log(`This is the spare bonus index ${spareBonusIndex}`)
-                console.log(`This is double frame ${bonusFrame}`)
-                const bonus = this.score+=(firstRoll + score)
-                console.log(`This is the frame score ${this.rolls.readFrameScore()}`)
-                if (score == 10) {
-                    this.spareIndex = spareBonusIndex
-                    this.rolls.clearFrameScore()
-                }
-                else {
-                    console.log('x')
-                    this.spareIndex = null
-                }
-                console.log(`This is the bonus score ${bonusScore}`)
-                console.log(`This is the score overall ${this.score}`)
-                return this.score
-            }
+            this.calculateSpare()
+           
         }
 
         else {
-            console.log(`This is the individual frames that is not a strike ${this.rolls.showFrames()}`)
-            const added = this.score += this.rolls.calculateFrameScore(this.rolls.showRolls())
-            console.log(this.score)
-            this.rolls.clearFrameScore()
-            return added
+            // const sum = this.frameScore.push(this.sum(this.rolls.showRolls()))
+            const sum = this.sum(this.rolls.showRolls())
+            this.listOfScores.push(sum)
+            // this.frameScore.shift()
+            console.log(`This is the list of scores ${this.listOfScores}`)
         }
 
     }
 
 
     readScore() {
-        return this.score
+        return this.listOfScores[this.listOfScores.length - 1]
     }
 }
 
@@ -277,25 +293,6 @@ rolls.addFrame()
 scores.calculate()
 rolls.clearRolls()
 rolls.addRoll(10)
-rolls.addFrame()
-scores.calculate()
-rolls.clearRolls()
-rolls.addRoll(10)
-rolls.addFrame()
-scores.calculate()
-rolls.clearRolls()
-rolls.addRoll(5)
-rolls.addRoll(5)
-rolls.addFrame()
-scores.calculate()
-rolls.clearRolls()
-rolls.addRoll(5)
-rolls.addRoll(5)
-rolls.addFrame()
-scores.calculate()
-rolls.clearRolls()
-rolls.addRoll(5)
-rolls.addRoll(5)
 rolls.addFrame()
 scores.calculate()
 rolls.clearRolls()
