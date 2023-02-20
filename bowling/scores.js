@@ -64,8 +64,6 @@ class Scores {
                 if (this.rolls.readFrameScore() == 10) {
                     this.score += this.rolls.readFrameScore()
                     this.spareIndex = this.rolls.showFrames().indexOf(this.rolls.showRolls())
-                    console.log(`This is the spare index ${this.spareIndex}`)
-                    console.log(`This is the score ${this.score}`)
                     this.rolls.clearFrameScore()
                     return this.spareIndex
                 }
@@ -124,9 +122,29 @@ class Scores {
         }
         this.frameScore.shift()
         this.strikeIndex = null
+        const sum = this.sum(this.frameScore[this.frameScore.length - 1])
         console.log(`This is the list of scoresssssss ${this.listOfScores}`)
-        
-        this.totalAndAddToListOfScores()
+        console.log(`This is the frame scoresssssss ${this.frameScore}`)
+
+        console.log(`This is the sum ${this.sum(this.frameScore[this.frameScore.length - 1])}`)
+
+        if (sum != 10) {
+            console.log(`It didnt equal 10`)
+            this.totalAndAddToListOfScores()
+        }
+
+    }
+
+    new(array) {
+        this.frameScore.push(array)
+        let sum = 0
+        this.frameScore[this.frameScore.length - 1].forEach((number) => {
+            console.log(this.frameScore)
+            sum += parseInt(number)
+        })
+        return sum
+
+
 
     }
 
@@ -179,7 +197,7 @@ class Scores {
 
         
         if (!this.frameScore.includes(10)) {
-            this.sum(this.frameScore)
+            this.sum(this.frameScore) // might need to index ? Test this
             this.listOfScores.push(parseInt(sum))
         }
 
@@ -237,7 +255,7 @@ class Scores {
                         console.log('C')
                         console.log(`This is frame score ${this.frameScore}`)
                         const bonusFrameScore = this.rolls.calculateFrameScore(bonusFrame)
-                        this.score += bonusFrameScore * 2
+                        this.score += bonusFrameScore * 2 // this doesn't apply anymore
                         this.rolls.clearFrameScore()
                     }
                 }
@@ -252,22 +270,50 @@ class Scores {
     }
 
     calculateSpare() {
-        const spareBonusIndex = this.readSpareIndex() + 1
-        const bonusFrame = this.rolls.showFrames()[spareBonusIndex]
-        if (this.rolls.showFrames().includes(bonusFrame)) { 
+        let number = 0
+        const spareBonusFrameIndex = this.readSpareIndex() + 1
+        const spareFrameIndex = this.readSpareIndex()
+        const bonusFrame = this.rolls.showFrames()[spareBonusFrameIndex]
+        const spareFrame = this.rolls.showFrames()[spareFrameIndex]
+        console.log(`This is the spare index ${this.spareIndex}`)
+        if (this.rolls.showFrames().includes(bonusFrame)) {
+            console.log('x') 
+            
+            this.frameScore.push(bonusFrame)
             const firstRoll = bonusFrame[0]
-            const score = (this.rolls.calculateFrameScore(bonusFrame))
-            const bonusScore = firstRoll + score
-            const bonus = this.score+=(firstRoll + score)
-            if (score == 10) {
-                this.spareIndex = spareBonusIndex
+            const spareFrameScore = (this.rolls.calculateFrameScore(spareFrame))
+            const bonusScore = firstRoll + spareFrameScore
+            if (this.listOfScores.length > 0) {
+                const lastElement = this.listOfScores[this.listOfScores.length - 1]
+                const total = lastElement + bonusScore
+                this.listOfScores.push(total)
+
+            }
+
+            else {
+                this.listOfScores.push(bonusScore)
+                
+            }
+            this.rolls.clearFrameScore()
+            this.frameScore.shift()
+            console.log(`This is the frame score ${this.frameScore}`)
+            if (this.rolls.calculateFrameScore(bonusFrame) == 10) {
+                this.spareIndex = spareBonusFrameIndex
                 this.rolls.clearFrameScore()
             }
             else {
                 this.spareIndex = null
             }
-            return this.score
+            if (this.frameScore.length > 0 && this.spareIndex == null) {
+                this.totalAndAddToListOfScores()
+            }
         }
+
+        else {
+            this.frameScore.push(spareFrame)
+        }
+        console.log(`This is the list of scores ${this.listOfScores}`)
+        console.log(`This is the frame scores ${this.frameScores}`)
 
     }
 
@@ -306,31 +352,57 @@ class Scores {
 }
 
 
-const rolls = new Rolls()
-const scores = new Scores(rolls)
-rolls.addRoll(10)
-rolls.addFrame()
-scores.calculate()
-rolls.clearRolls()
-rolls.addRoll(10)
-rolls.addFrame()
-scores.calculate()
-rolls.clearRolls()
-rolls.addRoll(10)
-rolls.addFrame()
-scores.calculate()
-rolls.clearRolls()
-rolls.addRoll(10)
-rolls.addFrame()
-scores.calculate()
-rolls.clearRolls()
-rolls.addRoll(4)
-rolls.addRoll(4)
-rolls.addFrame()
-scores.calculate()
-rolls.clearRolls()
-console.log(scores.readListOfScores())
-console.log(scores.readScore())
+// const rolls = new Rolls()
+// const scores = new Scores(rolls)
+// rolls.addRoll(10)
+// rolls.addFrame()
+// scores.calculate()
+// rolls.clearRolls()
+// rolls.addRoll(10)
+// rolls.addFrame()
+// scores.calculate()
+// rolls.clearRolls()
+// rolls.addRoll(10)
+// rolls.addFrame()
+// scores.calculate()
+// rolls.clearRolls()
+// rolls.addRoll(10)
+// rolls.addFrame()
+// scores.calculate()
+// rolls.clearRolls()
+// rolls.addRoll(4)
+// rolls.addRoll(4)
+// rolls.addFrame()
+// scores.calculate()
+// rolls.clearRolls()
+// rolls.addRoll(7)
+// rolls.addRoll(3)
+// rolls.addFrame()
+// scores.calculate()
+// rolls.clearRolls()
+// rolls.addRoll(1)
+// rolls.addRoll(4)
+// rolls.addFrame()
+// scores.calculate()
+// rolls.clearRolls()
+// rolls.addRoll(6)
+// rolls.addRoll(3)
+// rolls.addFrame()
+// scores.calculate()
+// rolls.clearRolls()
+// rolls.addRoll(1)
+// rolls.addRoll(1)
+// rolls.addFrame()
+// scores.calculate()
+// rolls.clearRolls()
+// rolls.addRoll(2)
+// rolls.addRoll(3)
+// rolls.addFrame()
+// scores.calculate()
+// rolls.clearRolls()
+// console.log(scores.readListOfScores())
+// console.log(scores.readScore())
+// console.log(scores.new([5,5]))
 
 module.exports = Scores
 
