@@ -103,6 +103,7 @@ class Scores {
         const lastElement = this.listOfScores[this.listOfScores.length - 1]
         const total = parseInt(sum) + parseInt(lastElement)
         this.listOfScores.push(parseInt(total))
+        this.frameScore.shift()
     }
 
     calculateBonusAfterOneStrike() {
@@ -110,7 +111,7 @@ class Scores {
         console.log('Calculating bonus After One Strike')
         const lastIndex = this.frameScore[this.frameScore.length - 1]
         const total= this.sum(lastIndex)
-        const first = this.frameScore[0] + total
+        const first = parseInt(this.frameScore[0]) + parseInt(total)
         console.log(`This is first ${first}`)
         if (this.listOfScores.length > 0) {
             const newTotal = this.listOfScores[this.listOfScores.length - 1] + first
@@ -152,7 +153,10 @@ class Scores {
         console.log(`called calculate bonus after 2 strikes`)
         console.log(`This is the frame score ${this.frameScore}`)
         let first = parseInt(this.frameScore[0])
+        console.log(`This is first element ${first}`)
         const b = parseInt(this.frameScore[1]) + parseInt(this.frameScore[2])
+        console.log(`This is the second element ${this.frameScore[1]}`)
+        console.log(`This is the third element ${this.frameScore[2]}`)
         first += b
         if (this.listOfScores.length > 0) {
             const newElement = first + this.listOfScores[this.listOfScores.length - 1]
@@ -182,13 +186,15 @@ class Scores {
     
 
         if (this.listOfScores.length > 0) {
-            const newElement = total + this.listOfScores[0]
+            console.log('AAAAAAAAAA')
+            const newElement = total + this.listOfScores[this.listOfScores.length - 1]
             console.log(`This is new element ${newElement}`)
             this.listOfScores.push(parseInt(newElement))
             this.frameScore.shift()
         }
 
         else {
+            console.log('BBBBBBBBBBB')
             this.listOfScores.push(parseInt(total))
             this.frameScore.shift()
             console.log(`This is the list of scores in calculate bonus after 2 strikes ${this.listOfScores}`)
@@ -269,6 +275,10 @@ class Scores {
 
     }
 
+    calculateStrikeTenthFrame() {
+        const firstTwoRolls = this.rolls.showRolls().slice(0, 2)
+    }
+
     calculateSpare() {
         let number = 0
         const spareBonusFrameIndex = this.readSpareIndex() + 1
@@ -277,7 +287,8 @@ class Scores {
         const spareFrame = this.rolls.showFrames()[spareFrameIndex]
         console.log(`This is the spare index ${this.spareIndex}`)
         if (this.rolls.showFrames().includes(bonusFrame)) {
-            console.log('x') 
+            console.log('x')
+            console.log(`This is the frame Score ${this.frameScore}`)
             
             this.frameScore.push(bonusFrame)
             const firstRoll = bonusFrame[0]
@@ -317,6 +328,35 @@ class Scores {
 
     }
 
+    calculateSpareAndStrike() {
+        if (this.frameScore[0].length == 2) {
+            this.frameScore.push(this.rolls.showRolls())
+            console.log(`This is the frame score ${this.frameScore}`)
+            const first = this.sum(this.frameScore[0])
+            console.log(`This is firsttttttt ${first}`)
+            const total = first + parseInt(this.frameScore[1])
+            console.log(`This is total ${total}`)
+            this.frameScore.shift()
+            this.spareIndex = null
+            if (this.listOfScores.length > 0) {
+                console.log('Hiya')
+                this.listOfScores.push(this.listOfScores[this.listOfScores.length - 1] + total)
+            }
+            else {
+                this.listOfScores.push(total)
+            }
+
+            console.log(`This is the frame score ${this.frameScore}`)
+            console.log(`This is the list of scores ${this.listOfScores}`)
+
+        }
+
+        else {
+            this.calculateStrike()
+        }
+        
+    }
+
     calculate() {
         console.log('')
         console.log('Start of calculate function')
@@ -325,13 +365,19 @@ class Scores {
             this.strikeOrSpareIndex()
         }
 
-        if (this.strikeIndex != null) {
+        if (this.strikeIndex != null && this.spareIndex != null) {
+            console.log('HELLOOOOOOO')
+            this.calculateSpareAndStrike()
+        }
+
+        else if (this.strikeIndex != null && this.spareIndex == null) {
             console.log(`Theres a strike index`)
             this.calculateStrike()
         }
         
 
-        else if (this.spareIndex != null) {
+        else if (this.spareIndex != null && this.strikeIndex == null) {
+            console.log(`There is a spare index`)
             this.calculateSpare()
            
         }
@@ -339,9 +385,25 @@ class Scores {
         else {
            
             const sum = this.sum(this.rolls.showRolls())
-            this.listOfScores.push(sum)
+            const lastElement = this.listOfScores[this.listOfScores.length - 1]
+            console.log(`This is sum ${sum}`)
+            console.log(`This is last element ${lastElement}`)
+            if (this.listOfScores.length > 0) {
+                const total = this.listOfScores[this.listOfScores.length - 1] + sum
+                this.listOfScores.push(total)
+                this.rolls.clearFrameScore()
+            }
+
+            else {
+                this.listOfScores.push(sum)
+                this.rolls.clearFrameScore()
+
+            }
+            
             console.log(`This is the list of scores ${this.listOfScores}`)
         }
+
+        console.log(`This is the frame score ${this.frameScore}`)
 
     }
 
@@ -352,56 +414,63 @@ class Scores {
 }
 
 
-// const rolls = new Rolls()
-// const scores = new Scores(rolls)
-// rolls.addRoll(10)
-// rolls.addFrame()
-// scores.calculate()
-// rolls.clearRolls()
-// rolls.addRoll(10)
-// rolls.addFrame()
-// scores.calculate()
-// rolls.clearRolls()
-// rolls.addRoll(10)
-// rolls.addFrame()
-// scores.calculate()
-// rolls.clearRolls()
-// rolls.addRoll(10)
-// rolls.addFrame()
-// scores.calculate()
-// rolls.clearRolls()
-// rolls.addRoll(4)
-// rolls.addRoll(4)
-// rolls.addFrame()
-// scores.calculate()
-// rolls.clearRolls()
-// rolls.addRoll(7)
-// rolls.addRoll(3)
-// rolls.addFrame()
-// scores.calculate()
-// rolls.clearRolls()
-// rolls.addRoll(1)
-// rolls.addRoll(4)
-// rolls.addFrame()
-// scores.calculate()
-// rolls.clearRolls()
-// rolls.addRoll(6)
-// rolls.addRoll(3)
-// rolls.addFrame()
-// scores.calculate()
-// rolls.clearRolls()
-// rolls.addRoll(1)
-// rolls.addRoll(1)
-// rolls.addFrame()
-// scores.calculate()
-// rolls.clearRolls()
-// rolls.addRoll(2)
-// rolls.addRoll(3)
-// rolls.addFrame()
-// scores.calculate()
-// rolls.clearRolls()
-// console.log(scores.readListOfScores())
-// console.log(scores.readScore())
+const rolls = new Rolls()
+const scores = new Scores(rolls)
+rolls.addRoll(1)
+rolls.addRoll(4)
+rolls.addFrame()
+scores.calculate()
+rolls.clearRolls()
+rolls.addRoll(4)
+rolls.addRoll(5)
+rolls.addFrame()
+scores.calculate()
+rolls.clearRolls()
+rolls.addRoll(6)
+rolls.addRoll(4)
+rolls.addFrame()
+scores.calculate()
+rolls.clearRolls()
+rolls.addRoll(5)
+rolls.addRoll(5)
+rolls.addFrame()
+scores.calculate()
+rolls.clearRolls()
+rolls.addRoll(10)
+rolls.addFrame()
+scores.calculate()
+rolls.clearRolls()
+rolls.addRoll(0)
+rolls.addRoll(1)
+rolls.addFrame()
+scores.calculate()
+rolls.clearRolls()
+rolls.addRoll(7)
+rolls.addRoll(3)
+rolls.addFrame()
+scores.calculate()
+rolls.clearRolls()
+rolls.addRoll(6)
+rolls.addRoll(4)
+rolls.addFrame()
+scores.calculate()
+rolls.clearRolls()
+rolls.addRoll(10)
+rolls.addFrame()
+scores.calculate()
+rolls.clearRolls()
+rolls.addRoll(2)
+rolls.addRoll(8)
+rolls.addFrame()
+scores.calculate()
+rolls.clearRolls()
+rolls.addRoll(6)
+rolls.addFrame()
+scores.calculate()
+rolls.clearRolls()
+console.log(scores.readListOfScores())
+console.log(scores.readScore())
+// console.log(scores.frameScore)
 // console.log(scores.new([5,5]))
 
 module.exports = Scores
