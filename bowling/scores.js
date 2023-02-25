@@ -10,6 +10,7 @@ class Scores {
         this.listOfScores = []
         this.frames = this.rolls.showFrames()
         this.frameScore = []
+        this.frameCount = 0
     }
 
     sumAndRemove (array) {
@@ -276,7 +277,43 @@ class Scores {
     }
 
     calculateStrikeTenthFrame() {
-        const firstTwoRolls = this.rolls.showRolls().slice(0, 2)
+        console.log('CALLED ITTTTTTTTTTT!!!!')
+        console.log(`This is the frame score before the push ${this.frameScore}`)
+        console.log(this.rolls.showRolls())
+        // if (this.rolls.showRolls().length == 2)
+        this.frameScore.push(this.rolls.showRolls())
+        if (this.frameScore[0] == 10 && this.frameScore[1] == 10) {
+            console.log(`This is the first element of the 3 roll ${this.frameScore[2][0]}`)
+            console.log(`This is the firsttt ${parseInt(this.frameScore[1])}`)
+            const total = (parseInt(this.frameScore[0]) + parseInt(this.frameScore[1])) + parseInt(this.frameScore[2][0])
+            const lastElement = this.listOfScores[this.listOfScores.length - 1]
+            const sum = total + lastElement
+            this.listOfScores.push(sum)
+            this.frameScore.shift()
+        }
+        console.log(`This is the frame score ${this.frameScore}`)
+        console.log(`This is the 2nd element in frame score ${this.frameScore[1]}`)
+        console.log(`This is the list of scores ${this.listOfScores}`)
+        const frame = this.frameScore[1].slice(0,2)
+        console.log(`This is frame ${frame}`)
+        const strikeRoll = parseInt(this.frameScore[0])
+        const bonusFrame = this.sum(this.frameScore[1].slice(0,2))
+        console.log(`This is bonus frame ${bonusFrame}`)
+        const total = strikeRoll + bonusFrame
+        console.log(`This is total ${total}`)
+        const lastElement = this.listOfScores[this.listOfScores.length - 1]
+        const sum = total + lastElement
+        this.listOfScores.push(sum)
+        this.frameScore.shift()
+        console.log(`This is the list of scores ${this.listOfScores}`)
+        console.log(`This is the list of scores ${this.listOfScores}`)
+        console.log(`This is the frame score ${this.frameScore}`)
+        const threeRollFrame = this.sum(this.frameScore[0])
+        // const newTotal = parseInt(threeRollFrame[threeRollFrame.length - 1]) // why cant i access 6
+        console.log(`This is new total ${threeRollFrame}`)
+        const newSum = threeRollFrame + this.listOfScores[this.listOfScores.length - 1]
+        this.listOfScores.push(newSum)
+
     }
 
     calculateSpare() {
@@ -360,13 +397,23 @@ class Scores {
     calculate() {
         console.log('')
         console.log('Start of calculate function')
+        this.frameCount += 1
+        console.log(`This is the frame count ${this.frameCount}`)
+
+        
         if (this.strikeIndex == null || this.spareIndex == null) {
             console.log('Called strike or spare Index')
             this.strikeOrSpareIndex()
         }
 
-        if (this.strikeIndex != null && this.spareIndex != null) {
+        if (this.strikeIndex != null  && this.frameCount == 10) {
+            console.log(`Calling calculate 10th frame`)
+            this.calculateStrikeTenthFrame()
+        }
+
+        else if (this.strikeIndex != null && this.spareIndex != null) {
             console.log('HELLOOOOOOO')
+            console.log(`This is the score length ${this.listOfScores.length}`)
             this.calculateSpareAndStrike()
         }
 
@@ -416,62 +463,45 @@ class Scores {
 
 const rolls = new Rolls()
 const scores = new Scores(rolls)
-rolls.addRoll(1)
-rolls.addRoll(4)
+rolls.addRoll(10)
 rolls.addFrame()
-scores.calculate()
-rolls.clearRolls()
-rolls.addRoll(4)
-rolls.addRoll(5)
-rolls.addFrame()
-scores.calculate()
-rolls.clearRolls()
-rolls.addRoll(6)
-rolls.addRoll(4)
-rolls.addFrame()
-scores.calculate()
-rolls.clearRolls()
-rolls.addRoll(5)
-rolls.addRoll(5)
-rolls.addFrame()
-scores.calculate()
+scores.calculate() 
 rolls.clearRolls()
 rolls.addRoll(10)
 rolls.addFrame()
-scores.calculate()
-rolls.clearRolls()
-rolls.addRoll(0)
-rolls.addRoll(1)
-rolls.addFrame()
-scores.calculate()
-rolls.clearRolls()
-rolls.addRoll(7)
-rolls.addRoll(3)
-rolls.addFrame()
-scores.calculate()
-rolls.clearRolls()
-rolls.addRoll(6)
-rolls.addRoll(4)
-rolls.addFrame()
-scores.calculate()
+scores.calculate() 
 rolls.clearRolls()
 rolls.addRoll(10)
 rolls.addFrame()
-scores.calculate()
+scores.calculate() 
 rolls.clearRolls()
-rolls.addRoll(2)
-rolls.addRoll(8)
+rolls.addRoll(10)
 rolls.addFrame()
-scores.calculate()
+scores.calculate() 
 rolls.clearRolls()
-rolls.addRoll(6)
+rolls.addRoll(10)
 rolls.addFrame()
-scores.calculate()
+scores.calculate() 
+rolls.clearRolls()
+rolls.addRoll(10)
+rolls.addFrame()
+scores.calculate() 
+rolls.clearRolls()
+rolls.addRoll(10)
+rolls.addFrame()
+scores.calculate() 
+rolls.clearRolls()
+rolls.addRoll(10)
+rolls.addFrame()
+scores.calculate() 
+rolls.clearRolls()
+rolls.addRoll(10)
+rolls.addRoll(1)
+rolls.addRoll(1)
+rolls.addFrame()
+scores.calculate() 
 rolls.clearRolls()
 console.log(scores.readListOfScores())
 console.log(scores.readScore())
-// console.log(scores.frameScore)
-// console.log(scores.new([5,5]))
-
 module.exports = Scores
 
