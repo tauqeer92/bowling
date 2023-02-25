@@ -13,7 +13,7 @@ class Scores {
         this.frameCount = 0
     }
 
-    sum(array) {
+    calculateFrameScore(array) {
         let sum = 0
         array.forEach((number) => {
             sum += parseInt(number)
@@ -22,40 +22,26 @@ class Scores {
 
     }
 
-    strikeOrSpareIndex() {
+    findStrikeOrSpareIndex() {
+        const totalFrameScore = this.calculateFrameScore(this.rolls.showRolls())
 
         if (this.rolls.rollCount() == 1) {
             if (this.strikeIndex == null) {
-                this.rolls.calculateFrameScore(this.rolls.showRolls())
                 
-                if (this.rolls.readFrameScore() == 10) {
-                    this.score += this.rolls.readFrameScore()
+                
+                if (totalFrameScore == 10) {
                     this.strikeIndex = this.rolls.showFrames().indexOf(this.rolls.showRolls())
-                    this.rolls.clearFrameScore()
                     return this.strikeIndex
     
                 }
             }
-
-            else {
-                this.rolls.clearFrameScore()
-            }
         }
-
 
         else if (this.rolls.rollCount() == 2) {
             if (this.spareIndex == null) {
-                this.rolls.calculateFrameScore(this.rolls.showRolls())
-
-                if (this.rolls.readFrameScore() == 10) {
-                    this.score += this.rolls.readFrameScore()
+                if (totalFrameScore == 10) {
                     this.spareIndex = this.rolls.showFrames().indexOf(this.rolls.showRolls())
-                    this.rolls.clearFrameScore()
                     return this.spareIndex
-                }
-
-                else {
-                    this.rolls.clearFrameScore()
                 }
             }
         }
@@ -79,7 +65,7 @@ class Scores {
     }
 
     totalAndAddToListOfScores() {
-        const sum = this.sum(this.frameScore[this.frameScore.length - 1])
+        const sum = this.calculateFrameScore(this.frameScore[this.frameScore.length - 1])
         const lastElement = this.listOfScores[this.listOfScores.length - 1]
         const total = parseInt(sum) + parseInt(lastElement)
         this.listOfScores.push(parseInt(total))
@@ -89,7 +75,7 @@ class Scores {
     calculateBonusAfterOneStrike() {
         const lastElementListOfScores = this.listOfScores[this.listOfScores.length - 1]
         const lastIndex = this.frameScore[this.frameScore.length - 1]
-        const total= this.sum(lastIndex)
+        const total= this.calculateFrameScore(lastIndex)
         const first = parseInt(this.frameScore[0]) + parseInt(total)
         if (this.listOfScores.length > 0) {
             const newTotal = this.listOfScores[this.listOfScores.length - 1] + first
@@ -101,7 +87,7 @@ class Scores {
         }
         this.frameScore.shift()
         this.strikeIndex = null
-        const sum = this.sum(this.frameScore[this.frameScore.length - 1])
+        const sum = this.calculateFrameScore(this.frameScore[this.frameScore.length - 1])
 
         if (sum != 10) {
             this.totalAndAddToListOfScores()
@@ -130,7 +116,7 @@ class Scores {
 
     }
 
-    calculateThreeStrikes() {
+    calculateBonusAfterThreeStrikes() {
         
         this.frameScore.push(parseInt(this.rolls.showRolls()))
         let total = this.frameScore[0] += (parseInt(this.frameScore[1]) + parseInt(this.frameScore[2]))
@@ -150,7 +136,7 @@ class Scores {
 
         
         if (!this.frameScore.includes(10)) {
-            this.sum(this.frameScore) // might need to index ? Test this
+            this.calculateFrameScore(this.frameScore) // might need to index ? Test this
             this.listOfScores.push(parseInt(sum))
         }
     }
@@ -168,7 +154,7 @@ class Scores {
                             this.strikeIndex = bonusFrameIndex
 
                             if (this.frameScore.length == 2) {
-                                this.calculateThreeStrikes() 
+                                this.calculateBonusAfterThreeStrikes() 
                             }
 
                             else {
@@ -222,13 +208,13 @@ class Scores {
         }
         const frame = this.frameScore[1].slice(0,2)
         const strikeRoll = parseInt(this.frameScore[0])
-        const bonusFrame = this.sum(this.frameScore[1].slice(0,2))
+        const bonusFrame = this.calculateFrameScore(this.frameScore[1].slice(0,2))
         const total = strikeRoll + bonusFrame
         const lastElement = this.listOfScores[this.listOfScores.length - 1]
         const sum = total + lastElement
         this.listOfScores.push(sum)
         this.frameScore.shift()
-        const threeRollFrame = this.sum(this.frameScore[0])
+        const threeRollFrame = this.calculateFrameScore(this.frameScore[0])
         const newSum = threeRollFrame + this.listOfScores[this.listOfScores.length - 1]
         this.listOfScores.push(newSum)
 
@@ -243,7 +229,7 @@ class Scores {
         if (this.rolls.showFrames().includes(bonusFrame)) {
             this.frameScore.push(bonusFrame)
             const firstRoll = bonusFrame[0]
-            const spareFrameScore = (this.rolls.calculateFrameScore(spareFrame))
+            const spareFrameScore = (this.calculateFrameScore(spareFrame))
             const bonusScore = firstRoll + spareFrameScore
             if (this.listOfScores.length > 0) {
                 const lastElement = this.listOfScores[this.listOfScores.length - 1]
@@ -256,11 +242,9 @@ class Scores {
                 this.listOfScores.push(bonusScore)
                 
             }
-            this.rolls.clearFrameScore()
             this.frameScore.shift()
-            if (this.rolls.calculateFrameScore(bonusFrame) == 10) {
+            if (this.calculateFrameScore(bonusFrame) == 10) {
                 this.spareIndex = spareBonusFrameIndex
-                this.rolls.clearFrameScore()
             }
             else {
                 this.spareIndex = null
@@ -278,7 +262,7 @@ class Scores {
     calculateSpareAndStrike() {
         if (this.frameScore[0].length == 2) {
             this.frameScore.push(this.rolls.showRolls())
-            const first = this.sum(this.frameScore[0])
+            const first = this.calculateFrameScore(this.frameScore[0])
             const total = first + parseInt(this.frameScore[1])
             this.frameScore.shift()
             this.spareIndex = null
@@ -299,7 +283,7 @@ class Scores {
     calculate() {
         this.frameCount += 1
         if (this.strikeIndex == null || this.spareIndex == null) {
-            this.strikeOrSpareIndex()
+            this.findStrikeOrSpareIndex()
         }
 
         if (this.strikeIndex != null  && this.frameCount == 10) {
@@ -322,7 +306,7 @@ class Scores {
 
         else {
            
-            const sum = this.sum(this.rolls.showRolls())
+            const sum = this.calculateFrameScore(this.rolls.showRolls())
             const lastElement = this.listOfScores[this.listOfScores.length - 1]
             if (this.listOfScores.length > 0) {
                 const total = this.listOfScores[this.listOfScores.length - 1] + sum
