@@ -59,6 +59,10 @@ class Rolls {
         this.rolls = []
     }
 
+    testRollCount(roll) {
+        return roll.length
+    }
+
 }
 
 
