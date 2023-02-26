@@ -1,0 +1,66 @@
+body {
+   
+}
+
+.card-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.pins {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card {
+    display: flex;
+    position: relative;
+    top: 170px;
+    justify-content: space-evenly;
+    width: 1200px;
+    height: 150px;
+    border: 1px solid rgb(0, 0, 0);
+}
+
+.frame {
+    position: relative;
+    border-left: 1px solid rgb(0, 0, 0);
+    
+}
+
+
+
+
+
+
+/* .first-roll {
+    position: relative;
+    border: 1px solid rgb(0, 0, 0);
+    right: 60px;
+    height: 80px;
+    /* transform: translateX(-10px); */
+    /* width: 58px;
+} */ 
+
+
+.pins-container {
+    position:relative;
+    top: 200px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+} 
+
+.pins button {
+    position: relative;
+    top: 20px;
+    border: 1px solid rgb(255, 242, 242);
+    height: 80px;
+    width: 120px;
+    font-size: 23;
+}

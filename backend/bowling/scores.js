@@ -1,11 +1,4 @@
-const Rolls = require('../bowling/rolls')
-
-// goes through the frames array in rolls
-// determines if a frame is a strike or spare
-// caclulates the bonus for a strike or spare
-// calculates different strike scenarios
-// most of the methods are calculate methods, how can we split a
-
+const Rolls = require('./rolls')
 class Scores {
 
     constructor (rolls) {
@@ -112,7 +105,6 @@ class Scores {
         let firstStrike = this.frameScore[0]
         const secondStrike = this.frameScore[1]
         const nonStrike = parseInt(this.frameScore[2])
-        console.log(nonStrike)
         const total = secondStrike + parseInt(nonStrike)
         firstStrike += total
         if (this.listOfScores.length > 0) {
