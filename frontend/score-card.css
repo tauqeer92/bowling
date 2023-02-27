@@ -3,9 +3,11 @@ body {
 }
 
 .card-container {
+    position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
+    width: auto;
 
 }
 
@@ -21,7 +23,7 @@ body {
     top: 170px;
     justify-content: space-evenly;
     width: 1200px;
-    height: 150px;
+    height: 120px;
     border: 1px solid rgb(0, 0, 0);
 }
 
@@ -31,19 +33,29 @@ body {
     
 }
 
+.frame-one {
+    margin-left: -30px;
+}
 
 
 
 
 
-/* .first-roll {
-    position: relative;
+
+.first-roll {
+    position: absolute;
     border: 1px solid rgb(0, 0, 0);
-    right: 60px;
-    height: 80px;
-    /* transform: translateX(-10px); */
-    /* width: 58px;
-} */ 
+    right: 0px;
+    height: 60px;
+    width: 58px;
+    text-align: left; /* align text horizontally */
+    line-height: 60px;
+} 
+
+.second-roll {
+    text-align: center; /* align text horizontally */
+    line-height: 60px;
+}
 
 
 .pins-container {
