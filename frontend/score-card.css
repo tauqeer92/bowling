@@ -33,21 +33,41 @@ body {
     
 }
 
+.score {
+    position: absolute;
+    text-align: left; 
+    line-height: 60px;
+    margin-left: -50px;
+    /* right: 80px; */
+
+}
 
 .first-roll {
+    display: flex;
     position: absolute;
+    justify-content: center;
+    align-items: center;
+    
+
+
     border: 1px solid rgb(0, 0, 0);
     right: 0px;
     height: 60px;
     width: 58px;
     top: -1px;
-    /* text-align: left; align text horizontally */
-    /* line-height: 60px; */ 
+    outline: none;
+    
 } 
 
 .second-roll {
-    text-align: right; /* align text horizontally */
-    line-height: 60px;
+    position: absolute;
+    outline: none;
+    display: flex;
+    justify-content: center;
+    /* align-items: center; */
+    position: absolute;
+    right: -25px;
+
 }
 
 
