@@ -2,21 +2,6 @@ body {
    
 }
 
-.card-container {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: auto;
-
-}
-
-.pins {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
 .card {
     display: flex;
     position: relative;
@@ -25,50 +10,43 @@ body {
     width: 1200px;
     height: 120px;
     border: 1px solid rgb(0, 0, 0);
-}
-
-.frame {
-    position: relative;
-    border-left: 1px solid rgb(0, 0, 0);
+    justify-content: center;
+    align-items: center;
+    margin: auto;
     
 }
 
-.score {
-    position: absolute;
-    text-align: left; 
-    line-height: 60px;
-    margin-left: -50px;
-    /* right: 80px; */
 
-}
-
-.first-roll {
+.frame {
     display: flex;
     position: absolute;
     justify-content: center;
     align-items: center;
-    
-
-
-    border: 1px solid rgb(0, 0, 0);
-    right: 0px;
-    height: 60px;
-    width: 58px;
-    top: -1px;
-    outline: none;
-    
-} 
-
-.second-roll {
-    position: absolute;
-    outline: none;
-    display: flex;
-    justify-content: center;
-    /* align-items: center; */
-    position: absolute;
-    right: -25px;
-
+    /* justify-content: space-evenly; */
+    border-right: 1px solid rgb(0, 0, 0);
+    height: 100%;
 }
+
+
+.rolls {
+    position: absolute;
+    display: flex;
+    border: 1px solid rgb(0, 0, 0);
+    width: 58px;
+    align-items: center;
+    justify-content: center;
+    height: 60px;
+    left: -59px;
+    top: -1px;
+}
+
+
+
+.roll {
+    display: flex;
+    margin-right: 50px;
+}
+
 
 
 .pins-container {
