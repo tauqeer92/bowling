@@ -7,29 +7,36 @@ body {
     position: relative;
     top: 170px;
     justify-content: space-evenly;
-    width: 1200px;
+    width: auto;
     height: 120px;
     border: 1px solid rgb(0, 0, 0);
     justify-content: center;
     align-items: center;
     margin: auto;
-    
+}
+
+.frame-score {
+    display: flex;
+    position: relative;
+    align-items: flex-end;
+    width: 0px;
+    right: 20px;
 }
 
 
 .frame {
     display: flex;
-    position: absolute;
+    position: relative;
     justify-content: center;
-    align-items: center;
-    /* justify-content: space-evenly; */
     border-right: 1px solid rgb(0, 0, 0);
     height: 100%;
+    margin: 30px;
+    width: auto;
 }
 
 
 .rolls {
-    position: absolute;
+    /* position: relative; */
     display: flex;
     border: 1px solid rgb(0, 0, 0);
     width: 58px;
