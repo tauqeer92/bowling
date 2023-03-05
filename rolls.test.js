@@ -1,4 +1,4 @@
-const Rolls = require('../bowling/rolls')
+const Rolls = require('./rolls')
 
 describe('Frame Count', () => {
     it('should return 0', () => {
