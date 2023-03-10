@@ -13,9 +13,36 @@ class Play {
     roll() {
         this.pins.forEach(score => {
             score.addEventListener('click', () => {
-                for (let i = 0; i < this.individualFrame.length; i++) {
+                for (let i = 0; i <= this.individualFrame.length; i++) {
                     // if theres a strike
+                    console.log(i)
+                    // && this.rolls.calculateFrameScore(this.rolls.showRolls()) >= 10 && this.rolls.rollCount() == 2
+                    // && this.individualFrame[i].querySelector('.rolls .roll.two').innerHTML != "" 
+
+                    // this loop stops at 9, if we click again, it will go on to 10 and there is no indexed frame 10
+
+                    if (i == 9 && this.individualFrame[i].querySelector('.rolls .roll.one').innerHTML != "" && this.individualFrame[i].querySelector('.rolls .roll.two').innerHTML != "") {
+                        console.log('WHY AINT IT WORKING')
+                        let amount = this.rolls.showLatestRoll()
+                        console.log(`This is the amount ${amount}`)
+                        this.rolls.addRoll(parseInt(score.value))
+                        this.rolls.addFrame()
+                        this.scores.calculate()
+                        console.log('1')
+                        console.log(`This is the frame score ${this.rolls.calculateFrameScore(this.rolls.showRolls())}`)
+                        
+                        if (this.rolls.calculateFrameScore(amount) >= 10 && amount.length == 2) {
+                            console.log('AYE')
+                            this.individualFrame[i].querySelector('.roll.three').append(score.value)
+                            this.rolls.clearFrameScore()
+                            break
+                        }
+                        
+                    }
+
+
                     if (this.individualFrame[i].querySelector('.rolls .roll.one').innerHTML == "" && this.individualFrame[i].querySelector('.rolls .roll.two').innerHTML == "" && score.value == 10) {
+                        console.log('x')
                         this.individualFrame[i].querySelector('.roll.two').append(score.value)
                         this.rolls.addRoll(parseInt(score.value))
                         this.rolls.addFrame()
@@ -46,6 +73,7 @@ class Play {
                             this.rolls.clearFrameScore()
                             this.index.push(i)
                             break
+
                         } else {
                             this.rolls.clearRolls()
                             this.rolls.clearRolls()
