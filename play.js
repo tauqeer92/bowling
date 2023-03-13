@@ -13,7 +13,7 @@ class Play {
     roll() {
         this.pins.forEach(score => {
             score.addEventListener('click', () => {
-                for (let i = 0; i <= this.individualFrame.length; i++) {
+                for (let i = 0; i <= this.individualFrame.length - 1; i++) {
                     // if theres a strike
                     console.log(i)
                     // && this.rolls.calculateFrameScore(this.rolls.showRolls()) >= 10 && this.rolls.rollCount() == 2
@@ -42,15 +42,26 @@ class Play {
 
 
                     if (this.individualFrame[i].querySelector('.rolls .roll.one').innerHTML == "" && this.individualFrame[i].querySelector('.rolls .roll.two').innerHTML == "" && score.value == 10) {
-                        console.log('x')
-                        this.individualFrame[i].querySelector('.roll.two').append(score.value)
-                        this.rolls.addRoll(parseInt(score.value))
-                        this.rolls.addFrame()
-                        this.scores.calculate()
-                        this.rolls.clearRolls()
-                        this.index.push(i)
-                        console.log(`THIS. IS. INDEX ${this.index}`)
-                        break
+                        
+                        if (i == 9) {
+                            
+                            this.individualFrame[i].querySelector('.roll.one').append(score.value)
+                            this.rolls.addRoll(parseInt(score.value))
+                            this.rolls.addFrame()
+                            this.scores.calculate()
+                            this.rolls.clearRolls()
+                            this.index.push(i)
+                            
+                        } else {
+                            this.individualFrame[i].querySelector('.roll.two').append(score.value)
+                            this.rolls.addRoll(parseInt(score.value))
+                            this.rolls.addFrame()
+                            this.scores.calculate()
+                            this.rolls.clearRolls()
+                            this.index.push(i)
+                            console.log(`THIS. IS. INDEX ${this.index}`)
+                            break
+                        }
                     }
                     // if theres a normal roll it adds it to roll one if its not 10
                     else if (this.individualFrame[i].querySelector('.rolls .roll.one').innerHTML == "" && this.individualFrame[i].querySelector('.rolls .roll.two').innerHTML == "" && score.value != 10) {
