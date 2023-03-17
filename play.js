@@ -80,32 +80,29 @@ class Play {
 
     }
 
-    tenthFrame(i, score) {
+    tenthFrame(frame, score) {
         
-            if (this.individualFrame[i].querySelector('.rolls .roll.three').innerHTML != "") {
+            if (this.individualFrame[frame].querySelector('.rolls .roll.three').innerHTML != "") {
                 console.log('A')
                 
             }
             // if it's the first strike in 10th frame
-            else if (this.individualFrame[i].querySelector('.rolls .roll.one').innerHTML == "" && this.individualFrame[i].querySelector('.rolls .roll.two').innerHTML == "" && score == 10) {
-                console.log('B')
-                this.individualFrame[i].querySelector('.roll.one').append(score)
+            else if (this.individualFrame[frame].querySelector('.rolls .roll.one').innerHTML == "" && this.individualFrame[frame].querySelector('.rolls .roll.two').innerHTML == "" && score == 10) {
+                this.individualFrame[frame].querySelector('.roll.one').append(score)
                 this.rolls.addRoll(parseInt(score))
-                this.index.push(i)
+                this.index.push(frame)
             }
 
-            else if (this.individualFrame[i].querySelector('.rolls .roll.one').innerHTML == "" && this.individualFrame[i].querySelector('.rolls .roll.two').innerHTML == "" && score != 10) {
-                console.log('C')
-                this.individualFrame[i].querySelector('.roll.one').append(score)
+            else if (this.individualFrame[frame].querySelector('.rolls .roll.one').innerHTML == "" && this.individualFrame[frame].querySelector('.rolls .roll.two').innerHTML == "" && score != 10) {
+                this.individualFrame[frame].querySelector('.roll.one').append(score)
                 this.rolls.addRoll(parseInt(score))
                 this.hidePins(score)
             }
 
             // second roll, if the rolls add up to be more than or equal to 10. its not added to a frame, if isn't, it's added to a frame
             // this is checking if you can do a third roll
-            else if (this.individualFrame[i].querySelector('.rolls .roll.one').innerHTML != "" && this.individualFrame[i].querySelector('.rolls .roll.two').innerHTML == "") {
-                console.log('D')
-                this.individualFrame[i].querySelector('.roll.two').append(score)
+            else if (this.individualFrame[frame].querySelector('.rolls .roll.one').innerHTML != "" && this.individualFrame[frame].querySelector('.rolls .roll.two').innerHTML == "") {
+                this.individualFrame[frame].querySelector('.roll.two').append(score)
                 let firstRoll = this.rolls.showRolls()[0]
                 let total = parseInt(firstRoll) + parseInt(score)
                 
@@ -114,32 +111,27 @@ class Play {
                     this.resetPins()
                 }
                 else {
-                    this.addFrame(i, score)
+                    this.addFrame(frame, score)
                     
                 }
             }
 
             // this handles the third roll
 
-            else if (this.individualFrame[i].querySelector('.rolls .roll.one').innerHTML != "" && this.individualFrame[i].querySelector('.rolls .roll.two').innerHTML != "") {
+            else if (this.individualFrame[frame].querySelector('.rolls .roll.one').innerHTML != "" && this.individualFrame[frame].querySelector('.rolls .roll.two').innerHTML != "") {
                 
                 let amount = this.rolls.showRolls()
                 if (this.rolls.calculateFrameScore(amount) >= 10) {
-                    this.addThirdRoll(i, score)
-                    
-                    
+                    this.addThirdRoll(frame, score)
                 }
             }
 
             // if there's a normal roll in the first roll in 10th frame
-            else if (this.individualFrame[i].querySelector('.rolls .roll.one').innerHTML == "" && this.individualFrame[i].querySelector('.rolls .roll.two').innerHTML == "") {
-                this.individualFrame[i].querySelector('.roll.one').append(score)
+            else if (this.individualFrame[frame].querySelector('.rolls .roll.one').innerHTML == "" && this.individualFrame[frame].querySelector('.rolls .roll.two').innerHTML == "") {
+                this.individualFrame[frame].querySelector('.roll.one').append(score)
                 this.rolls.addRoll(parseInt(score.value))
                 this.hidePins(score)
             }
-        
-    
-
     }
 
     calculate(score) {
