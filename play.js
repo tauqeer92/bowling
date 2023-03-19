@@ -30,12 +30,6 @@ class Play {
         this.totalScore.innerHTML = this.scores.readScore()
     }
 
-    addFirstRoll(frame, score) {
-        this.individualFrame[frame].querySelector('.roll.one').append(score)
-        this.rolls.addRoll(parseInt(score))
-        this.hidePins(score)
-    }
-
     addStrike(frame, score) {
         this.individualFrame[frame].querySelector('.roll.two').append(score)
         this.rolls.addRoll(parseInt(score))
@@ -46,11 +40,12 @@ class Play {
     }
 
     addFrame(frame, score) {
-        console.log('ABC')
         this.rolls.addRoll(parseInt(score))
+        console.log(this.rolls.showRolls())
         this.rolls.addFrame()
         this.scores.calculate()
         this.rolls.clearRolls()
+        this.individualFrame[frame].querySelector('.roll.two').append(score);
         this.individualFrame[frame].querySelector('.frame-score').append(this.scores.readScore())
         this.addFinalScore()
         this.resetPins()
@@ -73,116 +68,193 @@ class Play {
         this.individualFrame[frame].querySelector('.roll.three').append(score)
         this.rolls.clearFrameScore()
         this.addFinalScore()
-        if (parseInt(score) != 10) {
-            this.individualFrame[frame].querySelector('.frame-score').append(this.scores.readScore())
-        }
+        this.individualFrame[frame].querySelector('.frame-score').append(this.scores.readScore())
+        // if (parseInt(score) != 10) {
+        //     this.individualFrame[frame].querySelector('.frame-score').append(this.scores.readScore())
+        // }
         
 
+    }
+
+    handleFirstTwoRollsLessThanTen(frame, score) {
+        console.log('B')
+        this.addFrame(frame, score);
+        console.log(this.scores.readListOfScores())
+        
+        // this.rolls.addRoll(parseInt(score));
+        // this.hidePins(score);
+    }
+    
+    handleFirstTwoRollsMoreThanTen(frame, score) {
+        this.individualFrame[frame].querySelector('.roll.two').append(score);
+        
+            this.rolls.addRoll(parseInt(score));
+            this.resetPins();
+        
+        // else {
+        //     this.addFrame(frame, score);
+        // }
     }
 
     tenthFrame(frame, score) {
+
+        // if (this.isFirstStrike(frame, score)) {
+        //     this.handleFirstStrikeInTenthFrame(frame, score);
+        // }
+
+        if (this.hasThirdRoll(frame)) {
+            console.log('A')
+
+        }
+
+        else if (this.isFirstRollInTenthFrame(frame)) {
+            this.handleNormalRollInFirstFrame(frame, score)
+        }
+
+        else if (this.isSecondRoll(frame)) {
+            if (this.isFirstTwoRollsMoreThanTen(frame, score)) {
+                this.handleFirstTwoRollsMoreThanTen(frame, score)
+            }
+            else {
+                this.handleFirstTwoRollsLessThanTen(frame, score)
+            }
+        }
+
+        else if (this.isMoreThanTen(frame)) {
+            this.addThirdRoll(frame, score)
+        }
+        // else if (this.hasThirdRoll(frame)) {
+        //     this.handleThirdRoll(frame, score);
+        // }
         
-            if (this.individualFrame[frame].querySelector('.rolls .roll.three').innerHTML != "") {
-                console.log('A')
-                
-            }
-            // if it's the first strike in 10th frame
-            else if (this.individualFrame[frame].querySelector('.rolls .roll.one').innerHTML == "" && this.individualFrame[frame].querySelector('.rolls .roll.two').innerHTML == "" && score == 10) {
-                this.individualFrame[frame].querySelector('.roll.one').append(score)
-                this.rolls.addRoll(parseInt(score))
-                this.index.push(frame)
-            }
-
-            else if (this.individualFrame[frame].querySelector('.rolls .roll.one').innerHTML == "" && this.individualFrame[frame].querySelector('.rolls .roll.two').innerHTML == "" && score != 10) {
-                this.individualFrame[frame].querySelector('.roll.one').append(score)
-                this.rolls.addRoll(parseInt(score))
-                this.hidePins(score)
-            }
-
-            // second roll, if the rolls add up to be more than or equal to 10. its not added to a frame, if isn't, it's added to a frame
-            // this is checking if you can do a third roll
-            else if (this.individualFrame[frame].querySelector('.rolls .roll.one').innerHTML != "" && this.individualFrame[frame].querySelector('.rolls .roll.two').innerHTML == "") {
-                this.individualFrame[frame].querySelector('.roll.two').append(score)
-                let firstRoll = this.rolls.showRolls()[0]
-                let total = parseInt(firstRoll) + parseInt(score)
-                
-                if (total >= 10) {
-                    this.rolls.addRoll(parseInt(score))
-                    this.resetPins()
-                }
-                else {
-                    this.addFrame(frame, score)
-                    
-                }
-            }
-
-            // this handles the third roll
-
-            else if (this.individualFrame[frame].querySelector('.rolls .roll.one').innerHTML != "" && this.individualFrame[frame].querySelector('.rolls .roll.two').innerHTML != "") {
-                
-                let amount = this.rolls.showRolls()
-                if (this.rolls.calculateFrameScore(amount) >= 10) {
-                    this.addThirdRoll(frame, score)
-                }
-            }
-
-            // if there's a normal roll in the first roll in 10th frame
-            else if (this.individualFrame[frame].querySelector('.rolls .roll.one').innerHTML == "" && this.individualFrame[frame].querySelector('.rolls .roll.two').innerHTML == "") {
-                this.individualFrame[frame].querySelector('.roll.one').append(score)
-                this.rolls.addRoll(parseInt(score.value))
-                this.hidePins(score)
-            }
+        // else if (this.isFirstTwoRollsLessThanTen(frame, score)) {
+        //     this.handleFirstTwoRollsLessThanTen(frame, score);
+        // }
+        // else if (this.isFirstTwoRollsMoreThanTen(frame, score)) {
+        //     this.handleFirstTwoRollsMoreThanTen(frame, score);
+        // }
+        // else {
+        //     this.handleNormalRollInFirstFrame(frame, score);
+        // }
     }
 
+    isFirstTwoRollsLessThanTen(frame, score) {
+        return this.individualFrame[frame].querySelector('.rolls .roll.one').innerHTML == "" &&
+               this.individualFrame[frame].querySelector('.rolls .roll.two').innerHTML == "" &&
+               score != 10;
+    }
+
+    isMoreThanTen(frame) {
+        return this.rolls.calculateFrameScore(this.rolls.showRolls()) >= 10 && this.individualFrame[frame].querySelector('.rolls .roll.one').innerHTML != "" &&
+        this.individualFrame[frame].querySelector('.rolls .roll.two').innerHTML != ""
+    }
+    
+
+    // we need this method to check if need to add the whole frame
+    
+    isFirstTwoRollsMoreThanTen(frame, score) {
+        return this.individualFrame[frame].querySelector('.rolls .roll.one').innerHTML != "" &&
+               this.individualFrame[frame].querySelector('.rolls .roll.two').innerHTML == "" &&
+               parseInt(this.rolls.showRolls()[0]) + parseInt(score) >= 10;
+    }
+    
+    handleThirdRoll(frame, score) {
+        let amount = this.rolls.showRolls();
+        if (this.rolls.calculateFrameScore(amount) >= 10) {
+            this.addThirdRoll(frame, score);
+        }
+    }
+    
+    handleFirstStrikeInTenthFrame(frame, score) {
+        this.individualFrame[frame].querySelector('.roll.one').append(score);
+        this.rolls.addRoll(parseInt(score));
+        this.index.push(frame);
+    }
+    
+    
+
+    isSecondRoll(frame) {
+        return this.individualFrame[frame].querySelector('.rolls .roll.one').innerHTML != "" && this.individualFrame[frame].querySelector('.rolls .roll.two').innerHTML == ""
+    }
+
+    isFirstRollInTenthFrame(frame) {
+        return this.individualFrame[frame].querySelector('.rolls .roll.one').innerHTML == ""
+
+    }
+    
+    hasThirdRoll(frame) {
+        return this.individualFrame[frame].querySelector('.rolls .roll.three').innerHTML != "";
+    }
+    
+    isFirstStrike(frame, score) {
+        return this.individualFrame[frame].querySelector('.rolls .roll.one').innerHTML == "" &&
+               this.individualFrame[frame].querySelector('.rolls .roll.two').innerHTML == "" &&
+               score == 10;
+    }
+    
+    
+    
+    handleNormalRollInFirstFrame(frame, score) {
+        this.individualFrame[frame].querySelector('.roll.one').append(score);
+        this.rolls.addRoll(parseInt(score));
+        console.log(`This is the first roll added ${this.rolls.showRolls()}`)
+        this.hidePins(score);
+    }
+
+    isNoStrike(frame, score) {
+        return this.individualFrame[frame].querySelector('.rolls .roll.one').innerHTML == "" && this.individualFrame[frame].querySelector('.rolls .roll.two').innerHTML == "" && score != 10
+    }
+
+    handleSecondRollInNormalFrame(frame, score) {
+        this.individualFrame[frame].querySelector('.roll.two').append(score)
+        this.rolls.addRoll(parseInt(score))
+        this.rolls.addFrame()
+        this.scores.calculate()
+        if (this.rolls.calculateFrameScore(this.rolls.showRolls()) == 10 && this.rolls.rollCount() == 2) {
+            this.addSpare(frame)
+            
+            
+
+        } else {
+            this.rolls.clearRolls()
+            this.rolls.clearFrameScore()
+            this.individualFrame[frame].querySelector('.frame-score').append(this.scores.readScore())
+            this.totalScore.innerHTML = this.scores.readScore()
+            this.resetPins()
+        }
+
+    }
+
+    addFirstRoll(frame, score) {
+        this.individualFrame[frame].querySelector('.roll.one').append(score)
+        this.rolls.addRoll(parseInt(score))
+        this.hidePins(score)
+    }
+    
+
     calculate(score) {
-        for (let i = 0; i <= this.individualFrame.length - 1; i++) {
-            console.log(`This is ${i}`)
-            if (i != 9 ) {
-                if (this.individualFrame[i].querySelector(`.rolls .roll.one`).innerHTML == "" && this.individualFrame[i].querySelector('.rolls .roll.two').innerHTML == "" && score == 10) {
-                    console.log(`This is the frames ${this.individualFrame.forEach(frame => {console.log(frame)})}`)
-                                
-                    this.addStrike(i, score)
+        for (let frame = 0; frame <= this.individualFrame.length - 1; frame++) {
+            if (frame != 9 ) {
+                if (this.isFirstStrike(frame, score)) {
+                    this.addStrike(frame, score)
                     break
-                    
-                
                 }
                 // if theres a normal roll it adds it to roll one if its not 10
-                else if (this.individualFrame[i].querySelector('.rolls .roll.one').innerHTML == "" && this.individualFrame[i].querySelector('.rolls .roll.two').innerHTML == "" && score != 10) {
+                else if (this.isNoStrike(frame, score)) {
                     
-                    this.addFirstRoll(i, score)
+                    this.addFirstRoll(frame, score)
                     break
                     
                 }
                 // if there's a normal roll it adds it to roll two if its not 10
-                else if (this.individualFrame[i].querySelector('.rolls .roll.one').innerHTML != "" && this.individualFrame[i].querySelector('.rolls .roll.two').innerHTML == "" && score != 10) {
-                    
-                    this.individualFrame[i].querySelector('.roll.two').append(score)
-                    
-                    
-                    this.rolls.addRoll(parseInt(score))
-                    this.rolls.addFrame()
-                    this.scores.calculate()
-                    if (this.rolls.calculateFrameScore(this.rolls.showRolls()) == 10 && this.rolls.rollCount() == 2) {
-                        this.addSpare(i)
-                        break
-                        
-    
-                    } else {
-                        this.rolls.clearRolls()
-                        this.rolls.clearFrameScore()
-                        this.individualFrame[i].querySelector('.frame-score').append(this.scores.readScore())
-                        this.totalScore.innerHTML = this.scores.readScore()
-                        this.resetPins()
-                        break
-                        
-                    }
-                    
+                else if (this.isSecondRoll(frame, score)) {
+                    this.handleSecondRollInNormalFrame(frame, score)
+                    break 
                 }
-
             }
 
             else {
-                this.tenthFrame(i, score)
+                this.tenthFrame(frame, score)
             }
             
         }
@@ -199,7 +271,6 @@ class Play {
 
                 if (this.index.length > 0) {
                     for (let i = 0; i <= this.index.length; i++) {
-                        
                         if (this.scores.readListOfScores()[this.index[i]] != undefined) {
                             
                             this.individualFrame[this.index[i]].querySelector('.frame-score').append(this.scores.readListOfScores()[this.index[i]])
