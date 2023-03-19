@@ -30,7 +30,7 @@ class Play {
         this.totalScore.innerHTML = this.scores.readScore()
     }
 
-    addStrike(frame, score) {
+    handleFirstStrike(frame, score) {
         this.individualFrame[frame].querySelector('.roll.two').append(score)
         this.rolls.addRoll(parseInt(score))
         this.rolls.addFrame()
@@ -52,7 +52,7 @@ class Play {
 
     }
 
-    addSpare(frame) {
+    handleSpare(frame) {
         
         this.rolls.clearRolls()
         this.rolls.clearFrameScore()
@@ -86,7 +86,7 @@ class Play {
 
                
         if (this.isFirstRollInTenthFrame(frame)) {
-            this.handleNormalRollInFirstFrame(frame, score)
+            this.handleFirstRoll(frame, score)
         }
 
         else if (this.isSecondRoll(frame)) {
@@ -130,11 +130,6 @@ class Play {
         }
     }
     
-    handleFirstStrikeInTenthFrame(frame, score) {
-        this.individualFrame[frame].querySelector('.roll.one').append(score);
-        this.rolls.addRoll(parseInt(score));
-        this.index.push(frame);
-    }
 
     isSecondRoll(frame) {
         return this.individualFrame[frame].querySelector('.rolls .roll.one').innerHTML != "" && this.individualFrame[frame].querySelector('.rolls .roll.two').innerHTML == ""
@@ -157,7 +152,7 @@ class Play {
     
     
     
-    handleNormalRollInFirstFrame(frame, score) {
+    handleFirstRoll(frame, score) {
         this.individualFrame[frame].querySelector('.roll.one').append(score);
         this.rolls.addRoll(parseInt(score));
         this.hidePins(score);
@@ -173,7 +168,7 @@ class Play {
         this.rolls.addFrame()
         this.scores.calculate()
         if (this.rolls.calculateFrameScore(this.rolls.showRolls()) == 10 && this.rolls.rollCount() == 2) {
-            this.addSpare(frame)
+            this.handleSpare(frame)
             
             
 
@@ -186,29 +181,23 @@ class Play {
         }
 
     }
-
-    addFirstRoll(frame, score) {
-        this.individualFrame[frame].querySelector('.roll.one').append(score)
-        this.rolls.addRoll(parseInt(score))
-        this.hidePins(score)
-    }
     
 
     calculate(score) {
         for (let frame = 0; frame <= this.individualFrame.length - 1; frame++) {
             if (frame != 9 ) {
                 if (this.isFirstStrike(frame, score)) {
-                    this.addStrike(frame, score)
+                    this.handleFirstStrike(frame, score)
                     break
                 }
-                // if theres a normal roll it adds it to roll one if its not 10
+                
                 else if (this.isNoStrike(frame, score)) {
                     
-                    this.addFirstRoll(frame, score)
+                    this.handleFirstRoll(frame, score)
                     break
                     
                 }
-                // if there's a normal roll it adds it to roll two if its not 10
+                
                 else {
                     if (this.isSecondRoll(frame, score)) {
                       this.handleSecondRollInNormalFrame(frame, score)
